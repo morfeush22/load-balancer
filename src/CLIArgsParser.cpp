@@ -8,12 +8,12 @@
 #include <string>
 
 namespace opts = boost::program_options;
-namespace pointer = boost::movelib;
+namespace ptr = boost::movelib;
 
 
 CLIArgsParser::CLIArgsParser() {
-    _description = pointer::unique_ptr<opts::options_description>(new opts::options_description("Allowed options"));
-    _variables_map = pointer::unique_ptr<opts::variables_map>(new opts::variables_map());
+    _description = ptr::unique_ptr<opts::options_description>(new opts::options_description("Allowed options"));
+    _variables_map = ptr::unique_ptr<opts::variables_map>(new opts::variables_map());
 
     _description->add_options()
             ("help", "produce help message")
