@@ -6,10 +6,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB SOURCES
-        src/*.h
-        src/*.c
-        )
+file(GLOB SOURCES src/*.cpp)
 
 add_executable(main main.cpp ${SOURCES})
 target_link_libraries(main PRIVATE ${Boost_LIBRARIES})

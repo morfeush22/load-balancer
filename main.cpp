@@ -1,16 +1,25 @@
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/option.hpp>
-using namespace std;
-#include <iostream>
+// Copyright Vladimir Prus 2002-2004.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-namespace po = boost::program_options;
+/* The simplest usage of the library.
+ */
 
-int main(int argc, char** argv) {
+#include "include/CLIArgsParser.h"
+#include <boost/move/unique_ptr.hpp>
 
-    po::options_description desc("Allowed options");
-    desc.add_options()
-            ("help", "produce help message")
-            ;
+namespace pointer = boost::movelib;
+
+
+int main(int argc, char **argv) {
+    auto cliArgsParser = pointer::unique_ptr<CLIArgsParser>(new CLIArgsParser());
+    cliArgsParser->ParseCLIArgs(argc, argv);
+
+    if (! cliArgsParser->AreArgsValid()) {
+        cliArgsParser->ShowHelp();
+        return 1;
+    }
 
     return 0;
 }
