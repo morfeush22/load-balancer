@@ -49,6 +49,7 @@ bool CLIArgsParser::AreArgsValid() {
     return _are_args_valid;
 }
 
-auto& CLIArgsParser::GetVariablesMap() {
-    return _variables_map;
+std::string CLIArgsParser::GetConfigFilePath() {
+    auto config_file_path = (*_variables_map)["config_file_path"];
+    return config_file_path.as<std::string>();
 }

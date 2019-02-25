@@ -16,7 +16,7 @@ class CLIArgsParser {
     void ParseCLIArgs(int argc, char **argv);
     void ShowHelp();
     bool AreArgsValid();
-    auto& GetVariablesMap();
+    std::string GetConfigFilePath();
 
     private:
     boost::movelib::unique_ptr<boost::program_options::options_description> _description;
