@@ -1,12 +1,10 @@
 #include "include/CLIArgsParser.h"
 #include "include/ConfigParser.h"
-#include <boost/move/unique_ptr.hpp>
-
-namespace ptr = boost::movelib;
+#include <memory>
 
 
 int main(int argc, char **argv) {
-    auto cliArgsParser = ptr::unique_ptr<CLIArgsParser>(new CLIArgsParser());
+    auto cliArgsParser = std::make_unique<CLIArgsParser>();
     cliArgsParser->ParseCLIArgs(argc, argv);
 
     if (! cliArgsParser->AreArgsValid()) {
@@ -15,7 +13,7 @@ int main(int argc, char **argv) {
     }
 
     auto config_file_path = cliArgsParser->GetConfigFilePath();
-    auto configParser = ptr::unique_ptr<ConfigParser>(new ConfigParser(config_file_path));
+    auto configParser = std::make_unique<ConfigParser>(config_file_path);
     configParser->ParseConfigFile();
 
     return 0;
