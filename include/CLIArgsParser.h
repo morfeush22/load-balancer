@@ -15,7 +15,7 @@ class CLIArgsParser {
     CLIArgsParser();
     void ParseCLIArgs(int argc, char **argv);
     void ShowHelp();
-    bool AreArgsValid();
+    bool ArgsValid();
     std::string GetConfigFilePath();
 
     private:

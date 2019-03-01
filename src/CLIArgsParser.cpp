@@ -27,7 +27,7 @@ void CLIArgsParser::ParseCLIArgs(int argc, char **argv) {
         if (_variables_map->count("help"))
             return;
 
-        if (!_variables_map->count("config_file_path"))
+        if (! _variables_map->count("config_file_path"))
             return;
 
         _are_args_valid = true;
@@ -44,7 +44,7 @@ void CLIArgsParser::ShowHelp() {
     std::cout << *_description << "\n";
 }
 
-bool CLIArgsParser::AreArgsValid() {
+bool CLIArgsParser::ArgsValid() {
     return _are_args_valid;
 }
 
