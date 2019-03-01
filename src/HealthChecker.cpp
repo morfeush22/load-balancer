@@ -18,11 +18,11 @@ socket_(io_context)
 {}
 
 void HealthChecker::run(std::string host, std::string port, std::string path) {
-    request_.version(HTTP_VERSION);
     request_.method(http::verb::get);
-    request_.target(path);
     request_.set(http::field::host, host);
     request_.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+    request_.target(path);
+    request_.version(HTTP_VERSION);
 
     resolver_.async_resolve(
             host,
@@ -102,9 +102,12 @@ void HealthChecker::on_read(beast::error_code error_code, std::size_t bytes_tran
     boost::ignore_unused(bytes_transferred);
 
     if (! error_code) {
-        std::cout << response_ << "\n";
-
+        healthy_ = response_.result() == beast::http::status::ok;
         socket_.shutdown(tcp::socket::shutdown_both, error_code);
     }
 
+}
+
+bool HealthChecker::healthy() {
+    return healthy_;
 }
