@@ -9,19 +9,23 @@
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace asio = boost::asio;
+using namespace std;
 using tcp = boost::asio::ip::tcp;
 
 
-HealthChecker::HealthChecker(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser):
+HealthChecker::HealthChecker(boost::asio::io_context &io_context, unsigned int health_check_period, string health_check_endpoint):
 resolver_(io_context),
 socket_(io_context)
-{}
+{
+    _health_check_period = move(health_check_period);
+    _health_check_endpoint = move(health_check_endpoint);
+}
 
-void HealthChecker::run(std::string host, std::string port, std::string path) {
+void HealthChecker::run(std::string host, std::string port) {
     request_.method(http::verb::get);
     request_.set(http::field::host, host);
     request_.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-    request_.target(path);
+    request_.target(_health_check_endpoint);
     request_.version(HTTP_VERSION);
 
     resolver_.async_resolve(

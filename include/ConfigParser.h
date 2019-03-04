@@ -34,7 +34,7 @@ class ConfigParser {
     std::string FrontendAdress();
     std::string FrontendPort();
     std::list<BackendServerDescription> BackendServers();
-    std::string BackendHealthCheckPeriod();
+    unsigned int BackendHealthCheckPeriod();
     std::string BackendHealthCheckEndpoint();
     std::string BackendAlorithm();
     std::string BackendCookieName();

@@ -1,6 +1,7 @@
 #include "include/CLIArgsParser.h"
 #include "include/ConfigParser.h"
 #include "include/HealthChecker.h"
+#include "include/HealthCheckerFactory.h"
 #include <memory>
 
 
@@ -19,8 +20,10 @@ int main(int argc, char **argv) {
 
     boost::asio::io_context io_context;
 
-    auto health_checker = std::make_shared<HealthChecker>(io_context, config_parser);
-    health_checker->run("localhost", "8080", "/");
+    auto health_checker_factory = std::make_unique<HealthCheckerFactory>(io_context, config_parser);
+
+    auto health_checker = health_checker_factory->MakeHealthChecker();
+    health_checker->run("localhost", "8080");
 
     auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(5));
     auto lambda = [&health_checker] (const boost::system::error_code&) { std::cout << health_checker->healthy() << "\n"; };

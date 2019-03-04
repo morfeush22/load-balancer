@@ -49,8 +49,8 @@ list<BackendServerDescription> ConfigParser::BackendServers() {
     return servers;
 }
 
-std::string ConfigParser::BackendHealthCheckPeriod() {
-    return _property_tree.get<string>("backend.health_check_period");
+unsigned int ConfigParser::BackendHealthCheckPeriod() {
+    return _property_tree.get<unsigned int>("backend.health_check_period");
 }
 
 std::string ConfigParser::BackendHealthCheckEndpoint() {
