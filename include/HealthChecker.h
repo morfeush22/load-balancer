@@ -20,12 +20,13 @@ class HealthChecker: public std::enable_shared_from_this<HealthChecker> {
     bool healthy();
 
     private:
+    boost::asio::deadline_timer deadline_timer_;
     boost::asio::ip::tcp::resolver resolver_;
     boost::asio::ip::tcp::socket socket_;
     boost::beast::flat_buffer buffer_;
     boost::beast::http::request<boost::beast::http::empty_body> request_;
     boost::beast::http::response<boost::beast::http::string_body> response_;
-    bool healthy_ = false;
+    std::atomic<bool> healthy_ = false;
     unsigned int _health_check_period;
     std::string _health_check_endpoint;
 

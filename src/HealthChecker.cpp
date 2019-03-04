@@ -14,10 +14,11 @@ using tcp = boost::asio::ip::tcp;
 
 
 HealthChecker::HealthChecker(boost::asio::io_context &io_context, unsigned int health_check_period, string health_check_endpoint):
+deadline_timer_(io_context),
 resolver_(io_context),
 socket_(io_context)
 {
-    _health_check_period = move(health_check_period);
+    _health_check_period = health_check_period;
     _health_check_endpoint = move(health_check_endpoint);
 }
 
@@ -38,6 +39,17 @@ void HealthChecker::run(std::string host, std::string port) {
                     asio::placeholders::iterator
                     )
             );
+
+
+    deadline_timer_.expires_from_now(boost::posix_time::seconds(_health_check_period));
+    deadline_timer_.async_wait(
+            boost::bind(
+                    &HealthChecker::run,
+                    shared_from_this(),
+                    host,
+                    port
+                    )
+            );
 }
 
 void HealthChecker::on_resolve(beast::error_code error_code, tcp::resolver::iterator endpoint_iterator) {
@@ -52,6 +64,9 @@ void HealthChecker::on_resolve(beast::error_code error_code, tcp::resolver::iter
                         ++endpoint_iterator
                         )
                 );
+    }
+    else {
+        healthy_ = false;
     }
 }
 
@@ -81,6 +96,9 @@ void HealthChecker::on_connect(beast::error_code error_code, tcp::resolver::iter
                 )
         );
     }
+    else {
+        healthy_ = false;
+    }
 }
 
 void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_transferred) {
@@ -99,7 +117,9 @@ void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_tra
                         )
                 );
     }
-
+    else {
+        healthy_ = false;
+    }
 }
 
 void HealthChecker::on_read(beast::error_code error_code, std::size_t bytes_transferred) {
@@ -109,7 +129,9 @@ void HealthChecker::on_read(beast::error_code error_code, std::size_t bytes_tran
         healthy_ = response_.result() == beast::http::status::ok;
         socket_.shutdown(tcp::socket::shutdown_both, error_code);
     }
-
+    else {
+        healthy_ = false;
+    }
 }
 
 bool HealthChecker::healthy() {
