@@ -26,6 +26,11 @@ int main(int argc, char **argv) {
     auto lambda = [&health_checker] (const boost::system::error_code&) { std::cout << health_checker->healthy() << "\n"; };
     deadline_timer.async_wait(lambda);
 
+    auto servers = config_parser->BackendServers();
+    for (auto &server: servers) {
+        std::cout << server;
+    }
+
     io_context.run();
 
     return 0;
