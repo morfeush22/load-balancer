@@ -5,8 +5,27 @@
 #ifndef LOAD_BALANCER_SERVERSREPOSITORY_H
 #define LOAD_BALANCER_SERVERSREPOSITORY_H
 
+#include "../include/ConfigParser.h"
+#include "../include/HealthCheckerFactory.h"
+#include <boost/optional.hpp>
+#include <string>
+#include <tuple>
+
 
 class ServersRepository {
+
+    public:
+    ServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory, std::shared_ptr<ConfigParser> config_parser);
+    boost::optional<std::tuple<std::string, std::string>> GetServer(std::string id);
+    std::list<std::tuple<std::string, std::string>> GetAllServers();
+
+    private:
+    std::unique_ptr<HealthCheckerFactory> health_checker_factory_;
+    std::shared_ptr<ConfigParser> config_parser_;
+    std::list<BackendServerDescription> backend_servers_;
+    std::map<std::string, std::shared_ptr<HealthChecker>> health_checkers_;
+
+    void StartHealthChecking();
 
 };
 

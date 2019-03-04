@@ -2,6 +2,7 @@
 #include "include/ConfigParser.h"
 #include "include/HealthChecker.h"
 #include "include/HealthCheckerFactory.h"
+#include "include/ServersRepository.h"
 #include <memory>
 
 
@@ -18,26 +19,26 @@ int main(int argc, char **argv) {
     auto config_parser = std::make_shared<ConfigParser>(config_file_path);
     config_parser->ParseConfigFile();
 
-    boost::asio::io_context io_context;
-
-    auto health_checker_factory = std::make_unique<HealthCheckerFactory>(io_context, config_parser);
-
-    auto health_checker = health_checker_factory->MakeHealthChecker();
-    health_checker->run("localhost", "8080");
-
-    auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(1));
-    std::function<void(const boost::system::error_code&)> lambda;
-    lambda = [&deadline_timer, &health_checker, &lambda] (const boost::system::error_code&) {
-        std::cout << health_checker->healthy() << "\n";
-        deadline_timer.expires_from_now(boost::posix_time::seconds(1));
-        deadline_timer.async_wait(lambda);
-    };
-    deadline_timer.async_wait(lambda);
-
     auto servers = config_parser->BackendServers();
     for (auto &server: servers) {
         std::cout << server;
     }
+
+    boost::asio::io_context io_context;
+
+    auto health_checker_factory = std::make_unique<HealthCheckerFactory>(io_context, config_parser);
+    auto servers_repository = std::make_unique<ServersRepository>(std::move(health_checker_factory), config_parser);
+
+    auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(1));
+    std::function<void(const boost::system::error_code&)> lambda;
+    lambda = [&deadline_timer, &servers_repository, &lambda] (const boost::system::error_code&) {
+        for (auto server: servers_repository->GetAllServers()) {
+            std::cout << std::get<0>(server) << ":" << std::get<1>(server) << "\n";
+        }
+        deadline_timer.expires_from_now(boost::posix_time::seconds(1));
+        deadline_timer.async_wait(lambda);
+    };
+    deadline_timer.async_wait(lambda);
 
     io_context.run();
 
