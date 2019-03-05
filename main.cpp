@@ -33,16 +33,17 @@ int main(int argc, char **argv) {
     auto proxy_connection_factory = std::make_unique<ProxyConnectionFactory>(io_context, config_parser, servers_repository);
     auto load_balancer = std::make_shared<Server>(io_context, config_parser, move(proxy_connection_factory));
 
-    auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(1));
-    std::function<void(const boost::system::error_code&)> lambda;
-    lambda = [&deadline_timer, &servers_repository, &lambda] (const boost::system::error_code&) {
-        for (const auto &server: servers_repository->GetAllServers()) {
-            std::cout << server;
-        }
-        deadline_timer.expires_from_now(boost::posix_time::seconds(1));
-        deadline_timer.async_wait(lambda);
-    };
-    deadline_timer.async_wait(lambda);
+    //TODO remove
+//    auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(1));
+//    std::function<void(const boost::system::error_code&)> lambda;
+//    lambda = [&deadline_timer, &servers_repository, &lambda] (const boost::system::error_code&) {
+//        for (const auto &server: servers_repository->GetAllServers()) {
+//            std::cout << server;
+//        }
+//        deadline_timer.expires_from_now(boost::posix_time::seconds(1));
+//        deadline_timer.async_wait(lambda);
+//    };
+//    deadline_timer.async_wait(lambda);
 
     load_balancer->run();
 
