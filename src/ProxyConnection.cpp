@@ -24,7 +24,6 @@ boost::asio::ip::tcp::socket & ProxyConnection::FrontendSocket() {
 }
 
 void ProxyConnection::run() {
-    auto server = servers_repository_->GetAllServers().front();
     request_ = {};
 
     http::async_read(
@@ -55,10 +54,27 @@ void ProxyConnection::on_read(boost::beast::error_code error_code, std::size_t b
         return;
     }
 
+    server_request_ = request_;
+
+    //start connection to server
+    auto server = servers_repository_->GetAllServers().front();
+    //request_.set(http::field::host, host);
+
+    resolver_.async_resolve(
+            server.address,
+            server.port,
+            boost::bind(
+                    &ProxyConnection::on_resolve,
+                    shared_from_this(),
+                    asio::placeholders::error,
+                    asio::placeholders::iterator
+            )
+    );
+
     // Send the response
     //handle_request(*doc_root_, std::move(req_), lambda_);
-    std::cout << request_ << "\n";
-    do_close();
+    //std::cout << request_ << "\n";
+    //do_close();
 }
 
 void ProxyConnection::do_close() {
@@ -66,4 +82,97 @@ void ProxyConnection::do_close() {
     frontend_socket_.shutdown(tcp::socket::shutdown_send, ec);
 
     // At this point the connection is closed gracefully
+}
+
+void ProxyConnection::on_resolve(boost::beast::error_code error_code,
+                                 boost::asio::ip::tcp::resolver::iterator endpoint_iterator) {
+    if (! error_code) {
+        tcp::endpoint endpoint = *endpoint_iterator;
+        backend_socket_.async_connect(
+                endpoint,
+                boost::bind(
+                        &ProxyConnection::on_server_connect,
+                        shared_from_this(),
+                        asio::placeholders::error,
+                        ++endpoint_iterator
+                )
+        );
+    }
+}
+
+void ProxyConnection::on_server_connect(boost::beast::error_code error_code,
+                                        boost::asio::ip::tcp::resolver::iterator endpoint_iterator) {
+    if (! error_code) {
+        http::async_write(
+                backend_socket_,
+                server_request_,
+                boost::bind(
+                        &ProxyConnection::on_server_write,
+                        shared_from_this(),
+                        asio::placeholders::error,
+                        asio::placeholders::bytes_transferred
+                )
+        );
+    }
+    else if (endpoint_iterator != tcp::resolver::iterator()) {
+        backend_socket_.close();
+        tcp::endpoint endpoint = *endpoint_iterator;
+        backend_socket_.async_connect(
+                endpoint,
+                boost::bind(
+                        &ProxyConnection::on_server_connect,
+                        shared_from_this(),
+                        asio::placeholders::error,
+                        ++endpoint_iterator
+                )
+        );
+    }
+
+}
+
+void ProxyConnection::on_server_write(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+    boost::ignore_unused(bytes_transferred);
+
+    if (! error_code) {
+        http::async_read(
+                backend_socket_,
+                server_buffer_,
+                server_response_,
+                boost::bind(
+                        &ProxyConnection::on_server_read,
+                        shared_from_this(),
+                        asio::placeholders::error,
+                        asio::placeholders::bytes_transferred
+                )
+        );
+    }
+}
+
+void ProxyConnection::on_server_read(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+    boost::ignore_unused(bytes_transferred);
+
+    if (! error_code) {
+        backend_socket_.shutdown(tcp::socket::shutdown_both, error_code);
+
+        response_ = server_response_;
+
+        http::async_write(
+                frontend_socket_,
+                response_,
+                boost::bind(
+                        &ProxyConnection::on_write,
+                        shared_from_this(),
+                        asio::placeholders::error,
+                        asio::placeholders::bytes_transferred
+                )
+        );
+    }
+}
+
+void ProxyConnection::on_write(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+    boost::ignore_unused(bytes_transferred);
+
+    if (! error_code) {
+        do_close();
+    }
 }
