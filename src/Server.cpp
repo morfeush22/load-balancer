@@ -3,12 +3,12 @@
 //
 
 #include <boost/lexical_cast.hpp>
-#include "../include/LoadBalancer.h"
+#include "../include/Server.h"
 
 namespace asio = boost::asio;
 
 
-LoadBalancer::LoadBalancer(boost::asio::io_context & io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory):
+Server::Server(boost::asio::io_context & io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory):
 _io_context(io_context),
 acceptor_(io_context),
 endpoint_(asio::ip::make_address_v4(config_parser->FrontendAdress()), boost::lexical_cast< unsigned short>(config_parser->FrontendPort())),
@@ -48,19 +48,19 @@ proxy_connection_factory_(move(proxy_connection_factory))
 
 }
 
-void LoadBalancer::run() {
+void Server::run() {
     if(! acceptor_.is_open())
         return;
     do_accept();
 }
 
-void LoadBalancer::do_accept() {
+void Server::do_accept() {
     auto proxy_connection = proxy_connection_factory_->MakeProxyConnection();
 
     acceptor_.async_accept(
             proxy_connection->FrontendSocket(),
             boost::bind(
-                    &LoadBalancer::on_accept,
+                    &Server::on_accept,
                     shared_from_this(),
                     proxy_connection,
                     asio::placeholders::error
@@ -69,7 +69,7 @@ void LoadBalancer::do_accept() {
 
 }
 
-void LoadBalancer::on_accept(std::shared_ptr<ProxyConnection> proxy_connection, boost::beast::error_code error_code) {
+void Server::on_accept(std::shared_ptr<ProxyConnection> proxy_connection, boost::beast::error_code error_code) {
     if (! error_code) {
         proxy_connection->run();
         do_accept();

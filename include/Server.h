@@ -11,10 +11,10 @@
 #include <boost/beast/core/error.hpp>
 
 
-class LoadBalancer: public std::enable_shared_from_this<LoadBalancer> {
+class Server: public std::enable_shared_from_this<Server> {
 
     public:
-    LoadBalancer(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory);
+    Server(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory);
     void run();
 
     private:
