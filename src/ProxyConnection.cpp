@@ -15,5 +15,5 @@ boost::asio::ip::tcp::socket & ProxyConnection::FrontendSocket() {
 }
 
 void ProxyConnection::run() {
-
+    std::cout << "run\n";
 }

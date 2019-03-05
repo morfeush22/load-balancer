@@ -44,6 +44,8 @@ int main(int argc, char **argv) {
     };
     deadline_timer.async_wait(lambda);
 
+    load_balancer->run();
+
     io_context.run();
 
     return 0;
