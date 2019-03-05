@@ -70,5 +70,8 @@ void LoadBalancer::do_accept() {
 }
 
 void LoadBalancer::on_accept(std::shared_ptr<ProxyConnection> proxy_connection, boost::beast::error_code error_code) {
-
+    if (! error_code) {
+        proxy_connection->run();
+        do_accept();
+    }
 }

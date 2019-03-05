@@ -4,10 +4,13 @@
 
 #include "../include/ProxyConnectionFactory.h"
 
-ProxyConnectionFactory::ProxyConnectionFactory(boost::asio::io_context &io_context):
-_io_context(io_context)
+//TODO pass scheduling strategy
+ProxyConnectionFactory::ProxyConnectionFactory(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::shared_ptr<ServersRepository> servers_repository):
+_io_context(io_context),
+config_parser_(move(config_parser)),
+servers_repository_(move(servers_repository))
 {}
 
 std::shared_ptr<ProxyConnection> ProxyConnectionFactory::MakeProxyConnection() {
-    return std::make_shared<ProxyConnection>(_io_context);
+    return std::make_shared<ProxyConnection>(_io_context, servers_repository_, config_parser_->BackendCookieName());
 }
