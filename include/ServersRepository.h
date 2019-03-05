@@ -9,15 +9,14 @@
 #include "../include/HealthCheckerFactory.h"
 #include <boost/optional.hpp>
 #include <string>
-#include <tuple>
 
 
 class ServersRepository {
 
     public:
     ServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory, std::shared_ptr<ConfigParser> config_parser);
-    boost::optional<std::tuple<std::string, std::string>> GetServer(std::string id);
-    std::list<std::tuple<std::string, std::string>> GetAllServers();
+    boost::optional<BackendServerDescription> GetServer(std::string id);
+    std::list<BackendServerDescription> GetAllServers();
 
     private:
     std::unique_ptr<HealthCheckerFactory> health_checker_factory_;

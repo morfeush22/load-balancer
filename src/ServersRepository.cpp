@@ -17,7 +17,7 @@ ServersRepository::ServersRepository(std::unique_ptr<HealthCheckerFactory> healt
 }
 
 void ServersRepository::StartHealthChecking() {
-    for (auto &server: backend_servers_) {
+    for (const auto &server: backend_servers_) {
         if (server.health_check) {
             auto health_checker = health_checker_factory_->MakeHealthChecker();
             health_checker->run(server.address, server.port);
@@ -26,11 +26,11 @@ void ServersRepository::StartHealthChecking() {
     }
 }
 
-boost::optional<tuple<string, string>> ServersRepository::GetServer(string id) {
-    for (auto &server: backend_servers_) {
+boost::optional<BackendServerDescription> ServersRepository::GetServer(string id) {
+    for (const auto &server: backend_servers_) {
         if (server.id == id) {
             if (! server.health_check || health_checkers_[id]->healthy()) {
-                return std::make_tuple(server.address, server.port);
+                return server;
             }
         }
     }
@@ -38,12 +38,12 @@ boost::optional<tuple<string, string>> ServersRepository::GetServer(string id) {
     return boost::none;
 }
 
-list<tuple<string, string>> ServersRepository::GetAllServers() {
-    list<tuple<string, string>> servers;
+list<BackendServerDescription> ServersRepository::GetAllServers() {
+    list<BackendServerDescription> servers;
 
-    for (auto &server: backend_servers_) {
+    for (const auto &server: backend_servers_) {
         if (! server.health_check || health_checkers_[server.id]->healthy()) {
-            servers.emplace_back(server.address, server.port);
+            servers.emplace_back(server);
         }
     }
 

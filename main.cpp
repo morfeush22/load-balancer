@@ -32,8 +32,8 @@ int main(int argc, char **argv) {
     auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(1));
     std::function<void(const boost::system::error_code&)> lambda;
     lambda = [&deadline_timer, &servers_repository, &lambda] (const boost::system::error_code&) {
-        for (auto server: servers_repository->GetAllServers()) {
-            std::cout << std::get<0>(server) << ":" << std::get<1>(server) << "\n";
+        for (const auto &server: servers_repository->GetAllServers()) {
+            std::cout << server;
         }
         deadline_timer.expires_from_now(boost::posix_time::seconds(1));
         deadline_timer.async_wait(lambda);
