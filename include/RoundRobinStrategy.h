@@ -13,7 +13,7 @@ class RoundRobinStrategy: public SchedulingStrategy {
 
     public:
     //TODO implementation
-    boost::optional<BackendServerDescription> SelectBackendServer(const std::list<BackendServerDescription> & backend_server_description);
+    const BackendServerDescription & SelectBackendServer(const std::list<BackendServerDescription> & backend_server_description);
 
 };
 

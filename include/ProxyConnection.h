@@ -15,7 +15,7 @@ class ProxyConnection: public std::enable_shared_from_this<ProxyConnection> {
     public:
     ProxyConnection(boost::asio::io_context &io_context,
             std::shared_ptr<BackendServersRepository> servers_repository,
-            const SchedulingStrategy &scheduling_strategy,
+            std::shared_ptr<SchedulingStrategy> scheduling_strategy,
             std::string backend_cookie_name);
     boost::asio::ip::tcp::socket & FrontendSocket();
     void run();
@@ -32,7 +32,7 @@ class ProxyConnection: public std::enable_shared_from_this<ProxyConnection> {
     boost::beast::http::response<boost::beast::http::string_body> server_response_;
 
     std::shared_ptr<BackendServersRepository> servers_repository_;
-    const SchedulingStrategy &scheduling_strategy_;
+    std::shared_ptr<SchedulingStrategy> scheduling_strategy_;
     std::string backend_cookie_name_;
 
     void on_read(boost::beast::error_code error_code, std::size_t bytes_transferred);

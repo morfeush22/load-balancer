@@ -13,13 +13,13 @@ using tcp = boost::asio::ip::tcp;
 
 ProxyConnection::ProxyConnection(boost::asio::io_context &io_context,
         std::shared_ptr<BackendServersRepository> servers_repository,
-        const SchedulingStrategy &scheduling_strategy,
+        std::shared_ptr<SchedulingStrategy> scheduling_strategy,
         std::string backend_cookie_name):
 resolver_(io_context),
 frontend_socket_(io_context),
 backend_socket_(io_context),
 servers_repository_(move(servers_repository)),
-scheduling_strategy_(scheduling_strategy),
+scheduling_strategy_(move(scheduling_strategy)),
 backend_cookie_name_(move(backend_cookie_name))
 {}
 
@@ -61,8 +61,14 @@ void ProxyConnection::on_read(boost::beast::error_code error_code, std::size_t b
     server_request_ = request_;
 
     //start connection to server
-    auto server = servers_repository_->GetAllServers().front();
-    //request_.set(http::field::host, host);
+    //TODO change name
+    auto servers_list = servers_repository_->GetAllServers();
+    if (servers_list.empty()) {
+        do_close();
+        return;
+    }
+
+    auto server = scheduling_strategy_->SelectBackendServer(servers_list);
 
     resolver_.async_resolve(
             server.address,

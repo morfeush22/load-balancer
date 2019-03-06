@@ -4,7 +4,7 @@
 
 #include "../include/RoundRobinStrategy.h"
 
-boost::optional<BackendServerDescription>
+const BackendServerDescription &
 RoundRobinStrategy::SelectBackendServer(const std::list<BackendServerDescription> &backend_server_description) {
-    return boost::optional<BackendServerDescription>();
+    return backend_server_description.front();
 }
