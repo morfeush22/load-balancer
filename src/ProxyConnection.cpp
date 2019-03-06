@@ -60,6 +60,11 @@ void ProxyConnection::on_read(boost::beast::error_code error_code, std::size_t b
 
     server_request_ = request_;
 
+    //if has cookie
+    //get server by id
+    //if server not empty, use it
+    //else choose one from list
+
     //start connection to server
     //TODO change name
     auto servers_list = servers_repository_->GetAllServers();

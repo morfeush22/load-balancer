@@ -26,6 +26,7 @@ void BackendServersRepository::StartHealthChecking() {
     }
 }
 
+//TODO return empty object rather than optional
 boost::optional<BackendServerDescription> BackendServersRepository::GetServer(string id) {
     for (const auto &server: backend_servers_) {
         if (server.id == id) {
