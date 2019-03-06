@@ -11,11 +11,15 @@ using namespace std;
 using tcp = boost::asio::ip::tcp;
 
 
-ProxyConnection::ProxyConnection(boost::asio::io_context &io_context, std::shared_ptr<BackendServersRepository> servers_repository, std::string backend_cookie_name):
+ProxyConnection::ProxyConnection(boost::asio::io_context &io_context,
+        std::shared_ptr<BackendServersRepository> servers_repository,
+        const SchedulingStrategy &scheduling_strategy,
+        std::string backend_cookie_name):
 resolver_(io_context),
 frontend_socket_(io_context),
 backend_socket_(io_context),
 servers_repository_(move(servers_repository)),
+scheduling_strategy_(scheduling_strategy),
 backend_cookie_name_(move(backend_cookie_name))
 {}
 

@@ -6,6 +6,7 @@
 #include "include/ProxyConnectionFactory.h"
 #include "include/FrontendServer.h"
 #include "include/Logger.h"
+#include "include/RoundRobinStrategy.h"
 #include <memory>
 
 
@@ -26,9 +27,11 @@ int main(int argc, char **argv) {
 
     boost::asio::io_context io_context;
 
+    const auto &round_robin = RoundRobinStrategy();
+
     auto health_checker_factory = std::make_unique<HealthCheckerFactory>(io_context, config_parser);
     auto servers_repository = std::make_shared<BackendServersRepository>(std::move(health_checker_factory), config_parser);
-    auto proxy_connection_factory = std::make_unique<ProxyConnectionFactory>(io_context, config_parser, servers_repository);
+    auto proxy_connection_factory = std::make_unique<ProxyConnectionFactory>(io_context, config_parser, servers_repository, round_robin);
     auto load_balancer = std::make_shared<FrontendServer>(io_context, config_parser, move(proxy_connection_factory));
 
     load_balancer->run();
