@@ -31,6 +31,7 @@ class ConfigParser {
     public:
     explicit ConfigParser(std::string config_file_path);
     void ParseConfigFile();
+    std::string LogLevel();
     std::string FrontendAdress();
     std::string FrontendPort();
     std::list<BackendServerDescription> BackendServers();

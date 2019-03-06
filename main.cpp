@@ -5,6 +5,7 @@
 #include "include/BackendServersRepository.h"
 #include "include/ProxyConnectionFactory.h"
 #include "include/FrontendServer.h"
+#include "include/Logger.h"
 #include <memory>
 
 
@@ -21,10 +22,7 @@ int main(int argc, char **argv) {
     auto config_parser = std::make_shared<ConfigParser>(config_file_path);
     config_parser->ParseConfigFile();
 
-    auto servers = config_parser->BackendServers();
-    for (auto &server: servers) {
-        std::cout << server;
-    }
+    SET_LOGGING_LEVEL(config_parser->LogLevel());
 
     boost::asio::io_context io_context;
 
@@ -33,21 +31,7 @@ int main(int argc, char **argv) {
     auto proxy_connection_factory = std::make_unique<ProxyConnectionFactory>(io_context, config_parser, servers_repository);
     auto load_balancer = std::make_shared<FrontendServer>(io_context, config_parser, move(proxy_connection_factory));
 
-    //TODO remove
-
-//    auto deadline_timer = boost::asio::deadline_timer(io_context, boost::posix_time::seconds(1));
-//    std::function<void(const boost::system::error_code&)> lambda;
-//    lambda = [&deadline_timer, &servers_repository, &lambda] (const boost::system::error_code&) {
-//        for (const auto &server: servers_repository->GetAllServers()) {
-//            std::cout << server;
-//        }
-//        deadline_timer.expires_from_now(boost::posix_time::seconds(1));
-//        deadline_timer.async_wait(lambda);
-//    };
-//    deadline_timer.async_wait(lambda);
-
     load_balancer->run();
-
     io_context.run();
 
     return 0;

@@ -2,6 +2,7 @@
 // Created by morfeush22 on 28.02.19.
 //
 
+#include "../include/Logger.h"
 #include "../include/HealthChecker.h"
 
 #define HTTP_VERSION 10
@@ -28,6 +29,15 @@ void HealthChecker::run(std::string host, std::string port) {
     request_.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
     request_.target(_health_check_endpoint);
     request_.version(HTTP_VERSION);
+
+    if (! healthy_) {
+        WARNING("backend server is NOT healthy: ", host, ":", port, _health_check_endpoint);
+    }
+    else {
+        DEBUG("backend server is responding: ", host, ":", port, _health_check_endpoint);
+    }
+
+    DEBUG("sending health check to backend server: ", host, ":", port, _health_check_endpoint);
 
     resolver_.async_resolve(
             host,

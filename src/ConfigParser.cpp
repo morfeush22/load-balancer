@@ -65,4 +65,8 @@ std::string ConfigParser::BackendCookieName() {
     return _property_tree.get<string>("backend.cookie_name");
 }
 
+std::string ConfigParser::LogLevel() {
+    return _property_tree.get<string>("all.log_level");
+}
+
 
