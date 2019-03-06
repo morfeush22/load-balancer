@@ -2,7 +2,9 @@
 // Created by morfeush22 on 04.03.19.
 //
 
+#include <boost/lexical_cast.hpp>
 #include "../include/ProxyConnection.h"
+#include "../include/Logger.h"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -42,7 +44,7 @@ void ProxyConnection::run() {
             )
     );
 
-    std::cout << "run\n";
+    DEBUG("new connection from: ", boost::lexical_cast<std::string>(frontend_socket_.remote_endpoint()));
 }
 
 void ProxyConnection::on_read(boost::beast::error_code error_code, std::size_t bytes_transferred) {
