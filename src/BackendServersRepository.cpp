@@ -2,12 +2,12 @@
 // Created by morfeush22 on 04.03.19.
 //
 
-#include "../include/ServersRepository.h"
+#include "../include/BackendServersRepository.h"
 
 using namespace std;
 
 
-ServersRepository::ServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory,
+BackendServersRepository::BackendServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory,
                                      std::shared_ptr<ConfigParser> config_parser):
                                      health_checker_factory_(move(health_checker_factory)),
                                      config_parser_(move(config_parser))
@@ -16,7 +16,7 @@ ServersRepository::ServersRepository(std::unique_ptr<HealthCheckerFactory> healt
     StartHealthChecking();
 }
 
-void ServersRepository::StartHealthChecking() {
+void BackendServersRepository::StartHealthChecking() {
     for (const auto &server: backend_servers_) {
         if (server.health_check) {
             auto health_checker = health_checker_factory_->MakeHealthChecker();
@@ -26,7 +26,7 @@ void ServersRepository::StartHealthChecking() {
     }
 }
 
-boost::optional<BackendServerDescription> ServersRepository::GetServer(string id) {
+boost::optional<BackendServerDescription> BackendServersRepository::GetServer(string id) {
     for (const auto &server: backend_servers_) {
         if (server.id == id) {
             if (! server.health_check || health_checkers_[id]->healthy()) {
@@ -38,7 +38,7 @@ boost::optional<BackendServerDescription> ServersRepository::GetServer(string id
     return boost::none;
 }
 
-list<BackendServerDescription> ServersRepository::GetAllServers() {
+list<BackendServerDescription> BackendServersRepository::GetAllServers() {
     list<BackendServerDescription> servers;
 
     for (const auto &server: backend_servers_) {

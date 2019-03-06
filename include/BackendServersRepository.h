@@ -11,10 +11,10 @@
 #include <string>
 
 
-class ServersRepository {
+class BackendServersRepository {
 
     public:
-    ServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory, std::shared_ptr<ConfigParser> config_parser);
+    BackendServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory, std::shared_ptr<ConfigParser> config_parser);
     boost::optional<BackendServerDescription> GetServer(std::string id);
     std::list<BackendServerDescription> GetAllServers();
 

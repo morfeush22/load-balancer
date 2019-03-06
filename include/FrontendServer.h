@@ -11,10 +11,10 @@
 #include <boost/beast/core/error.hpp>
 
 
-class Server: public std::enable_shared_from_this<Server> {
+class FrontendServer: public std::enable_shared_from_this<FrontendServer> {
 
     public:
-    Server(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory);
+    FrontendServer(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory);
     void run();
 
     private:

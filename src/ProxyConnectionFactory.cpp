@@ -5,7 +5,7 @@
 #include "../include/ProxyConnectionFactory.h"
 
 //TODO pass scheduling strategy
-ProxyConnectionFactory::ProxyConnectionFactory(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::shared_ptr<ServersRepository> servers_repository):
+ProxyConnectionFactory::ProxyConnectionFactory(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::shared_ptr<BackendServersRepository> servers_repository):
 _io_context(io_context),
 config_parser_(move(config_parser)),
 servers_repository_(move(servers_repository))
