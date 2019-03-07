@@ -4,6 +4,8 @@
 
 #include "../include/RoundRobin.h"
 
+using namespace std;
+
 //TODO implementation
 const BackendServerDescription &
 RoundRobin::SelectBackendServer(const std::list<BackendServerDescription> &backend_server_description) {
@@ -15,3 +17,7 @@ void RoundRobin::UpdateBackendServerStatistics(
         std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 }
+
+RoundRobin::RoundRobin(std::string cookie_name):
+cookie_name_(move(cookie_name))
+{}

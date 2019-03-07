@@ -17,6 +17,7 @@ class SchedulingStrategyBuilder {
 
     private:
     std::string algorithm_;
+    std::string cookie_name_;
 
 };
 

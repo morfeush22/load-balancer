@@ -6,17 +6,17 @@
 #include "../include/RoundRobin.h"
 #include "../include/Logger.h"
 
-SchedulingStrategyBuilder::SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser) {
-    algorithm_ = config_parser->BackendAlorithm();
-    ConstructSchedulingStrategy();
-}
+SchedulingStrategyBuilder::SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser):
+algorithm_(config_parser->BackendAlorithm()),
+cookie_name_(config_parser->BackendAlorithm())
+{}
 
 std::shared_ptr<SchedulingStrategy> SchedulingStrategyBuilder::ConstructSchedulingStrategy() {
     if (algorithm_ == "round_robin") {
-        return std::make_shared<SchedulingStrategy>(std::make_unique<RoundRobin>());
+        return std::make_shared<SchedulingStrategy>(std::make_unique<RoundRobin>(cookie_name_));
     }
     else {
         WARNING("using default round robin algorithm");
-        return std::make_shared<SchedulingStrategy>(std::make_unique<RoundRobin>());
+        return std::make_shared<SchedulingStrategy>(std::make_unique<RoundRobin>(cookie_name_));
     }
 }

@@ -13,11 +13,15 @@
 class RoundRobin: public SchedulingAlgorithm {
 
 public:
+    explicit RoundRobin(std::string cookie_name);
     const BackendServerDescription & SelectBackendServer(
             const std::list<BackendServerDescription> & backend_server_description) override;
     void UpdateBackendServerStatistics(
             const BackendServerDescription &SelectBackendServer,
             std::size_t bytes_transferred) override;
+
+private:
+    std::string cookie_name_;
 
 };
 
