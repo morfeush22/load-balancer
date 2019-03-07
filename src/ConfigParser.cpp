@@ -11,25 +11,25 @@ using namespace std;
 
 
 ConfigParser::ConfigParser(string config_file_path) {
-    _config_file_path = move(config_file_path);
+    config_file_path_ = move(config_file_path);
 }
 
 void ConfigParser::ParseConfigFile() {
-    prop_tree::ini_parser::read_ini(_config_file_path, _property_tree);
+    prop_tree::ini_parser::read_ini(config_file_path_, property_tree_);
 }
 
 std::string ConfigParser::FrontendAdress() {
-    return _property_tree.get<string>("frontend.address");
+    return property_tree_.get<string>("frontend.address");
 }
 
 std::string ConfigParser::FrontendPort() {
-    return _property_tree.get<string>("frontend.port");
+    return property_tree_.get<string>("frontend.port");
 }
 
 list<BackendServerDescription> ConfigParser::BackendServers() {
    list<BackendServerDescription> servers;
 
-   auto s = _property_tree.get<std::string>("backend.servers");
+   auto s = property_tree_.get<std::string>("backend.servers");
    vector<string> ss;
    boost::split(ss, s, boost::is_any_of(","));
 
@@ -38,7 +38,7 @@ list<BackendServerDescription> ConfigParser::BackendServers() {
 
        desc.id = id;
 
-       auto child = _property_tree.get_child(id);
+       auto child = property_tree_.get_child(id);
        desc.address = child.get<string>("address");
        desc.port = child.get<string>("port");
        desc.health_check = child.get<bool>("health_check");
@@ -50,23 +50,23 @@ list<BackendServerDescription> ConfigParser::BackendServers() {
 }
 
 unsigned int ConfigParser::BackendHealthCheckPeriod() {
-    return _property_tree.get<unsigned int>("backend.health_check_period");
+    return property_tree_.get<unsigned int>("backend.health_check_period");
 }
 
 std::string ConfigParser::BackendHealthCheckEndpoint() {
-    return _property_tree.get<string>("backend.health_check_endpoint");
+    return property_tree_.get<string>("backend.health_check_endpoint");
 }
 
 std::string ConfigParser::BackendAlorithm() {
-    return _property_tree.get<string>("backend.algorithm");
+    return property_tree_.get<string>("backend.algorithm");
 }
 
 std::string ConfigParser::BackendCookieName() {
-    return _property_tree.get<string>("backend.cookie_name");
+    return property_tree_.get<string>("backend.cookie_name");
 }
 
 std::string ConfigParser::LogLevel() {
-    return _property_tree.get<string>("all.log_level");
+    return property_tree_.get<string>("all.log_level");
 }
 
 bool ConfigParser::IsConfigValid() {

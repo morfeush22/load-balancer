@@ -9,12 +9,12 @@ ProxyConnectionFactory::ProxyConnectionFactory(boost::asio::io_context &io_conte
         std::shared_ptr<ConfigParser> config_parser,
         std::shared_ptr<BackendServersRepository> servers_repository,
         std::shared_ptr<SchedulingStrategy> scheduling_strategy):
-_io_context(io_context),
+io_context_(io_context),
 config_parser_(move(config_parser)),
 servers_repository_(move(servers_repository)),
 scheduling_strategy_(move(scheduling_strategy))
 {}
 
 std::shared_ptr<ProxyConnection> ProxyConnectionFactory::MakeProxyConnection() {
-    return std::make_shared<ProxyConnection>(_io_context, servers_repository_, scheduling_strategy_, config_parser_->BackendCookieName());
+    return std::make_shared<ProxyConnection>(io_context_, servers_repository_, scheduling_strategy_, config_parser_->BackendCookieName());
 }

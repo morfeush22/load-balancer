@@ -18,7 +18,7 @@ class FrontendServer: public std::enable_shared_from_this<FrontendServer> {
     void run();
 
     private:
-    boost::asio::io_context & _io_context;
+    boost::asio::io_context & io_context_;
     std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory_;
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::endpoint endpoint_;

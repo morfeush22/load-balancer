@@ -19,9 +19,9 @@ class CLIArgsParser {
     std::string GetConfigFilePath();
 
     private:
-    std::unique_ptr<boost::program_options::options_description> _description;
-    std::unique_ptr<boost::program_options::variables_map> _variables_map;
-    bool _are_args_valid = false;
+    std::unique_ptr<boost::program_options::options_description> description_;
+    std::unique_ptr<boost::program_options::variables_map> variables_map_;
+    bool are_args_valid_ = false;
 
 };
 

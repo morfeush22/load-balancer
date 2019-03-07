@@ -8,10 +8,10 @@ namespace asio = boost::asio;
 
 
 HealthCheckerFactory::HealthCheckerFactory(asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser):
-_io_context(io_context),
-_config_parser(move(config_parser))
+io_context_(io_context),
+config_parser_(move(config_parser))
 {}
 
 std::shared_ptr<HealthChecker> HealthCheckerFactory::MakeHealthChecker() {
-    return std::make_shared<HealthChecker>(_io_context, _config_parser->BackendHealthCheckPeriod(), _config_parser->BackendHealthCheckEndpoint());
+    return std::make_shared<HealthChecker>(io_context_, config_parser_->BackendHealthCheckPeriod(), config_parser_->BackendHealthCheckEndpoint());
 }

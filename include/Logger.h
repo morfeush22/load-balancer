@@ -26,7 +26,7 @@ namespace logger {
     };
 
     class Logger {
-        unsigned int log_line_number;
+        unsigned int log_line_number_;
 
         std::string get_time() {
             std::string time_str;
@@ -42,24 +42,24 @@ namespace logger {
             header.str("");
             header.fill('0');
             header.width(7);
-            header << log_line_number++ <<" < "<<get_time()<<" - ";
+            header << log_line_number_++ <<" < "<<get_time()<<" - ";
             header.fill('0');
             header.width(7);
             header <<clock()<<" > ~ ";
             return header.str();
         }
-        std::stringstream log_stream;
+        std::stringstream log_stream_;
         severity_type severity_ = severity_type::error;
 
         //Core printing functionality
         void print_impl() {
-            std::cout << ( get_logline_header() + log_stream.str() ) << "\n";
-            log_stream.str("");
+            std::cout << ( get_logline_header() + log_stream_.str() ) << "\n";
+            log_stream_.str("");
         }
         template<typename First, typename...Rest>
         void print_impl(First parm1, Rest...parm);
         Logger() {
-            log_line_number = 0;
+            log_line_number_ = 0;
         }
 
         public:
@@ -94,7 +94,7 @@ namespace logger {
     template<typename First, typename...Rest >
     void Logger::print_impl(First parm1, Rest...parm)
     {
-        log_stream<<parm1;
+        log_stream_<<parm1;
         print_impl(parm...);
     }
 
@@ -108,13 +108,13 @@ namespace logger {
         switch( severity )
         {
             case severity_type::debug:
-                log_stream<<"<DEBUG>   : ";
+                log_stream_<<"<DEBUG>   : ";
                 break;
             case severity_type::warning:
-                log_stream<<"<WARNING> : ";
+                log_stream_<<"<WARNING> : ";
                 break;
             case severity_type::error:
-                log_stream<<"<ERROR>   : ";
+                log_stream_<<"<ERROR>   : ";
                 break;
         };
         print_impl( args... );

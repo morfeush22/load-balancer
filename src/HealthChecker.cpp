@@ -19,25 +19,25 @@ deadline_timer_(io_context),
 resolver_(io_context),
 socket_(io_context)
 {
-    _health_check_period = health_check_period;
-    _health_check_endpoint = move(health_check_endpoint);
+    health_check_period_ = health_check_period;
+    health_check_endpoint_ = move(health_check_endpoint);
 }
 
 void HealthChecker::run(std::string host, std::string port) {
     request_.method(http::verb::get);
     request_.set(http::field::host, host);
     request_.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-    request_.target(_health_check_endpoint);
+    request_.target(health_check_endpoint_);
     request_.version(HTTP_VERSION);
 
     if (! healthy_) {
-        WARNING("backend server is NOT healthy: ", host, ":", port, _health_check_endpoint);
+        WARNING("backend server is NOT healthy: ", host, ":", port, health_check_endpoint_);
     }
     else {
-        DEBUG("backend server is responding: ", host, ":", port, _health_check_endpoint);
+        DEBUG("backend server is responding: ", host, ":", port, health_check_endpoint_);
     }
 
-    DEBUG("sending health check to backend server: ", host, ":", port, _health_check_endpoint);
+    DEBUG("sending health check to backend server: ", host, ":", port, health_check_endpoint_);
 
     resolver_.async_resolve(
             host,
@@ -51,7 +51,7 @@ void HealthChecker::run(std::string host, std::string port) {
             );
 
 
-    deadline_timer_.expires_from_now(boost::posix_time::seconds(_health_check_period));
+    deadline_timer_.expires_from_now(boost::posix_time::seconds(health_check_period_));
     deadline_timer_.async_wait(
             boost::bind(
                     &HealthChecker::run,

@@ -11,26 +11,26 @@ namespace opts = boost::program_options;
 
 
 CLIArgsParser::CLIArgsParser() {
-    _description = std::make_unique<opts::options_description>("Allowed options");
-    _variables_map = std::make_unique<opts::variables_map>();
+    description_ = std::make_unique<opts::options_description>("Allowed options");
+    variables_map_ = std::make_unique<opts::variables_map>();
 
-    _description->add_options()
+    description_->add_options()
             ("help", "produce help message")
             ("config_file_path", opts::value<std::string>(), "set path to config file");
 }
 
 void CLIArgsParser::ParseCLIArgs(int argc, char **argv) {
     try {
-        opts::store(opts::parse_command_line(argc, argv, *_description), *_variables_map);
-        opts::notify(*_variables_map);
+        opts::store(opts::parse_command_line(argc, argv, *description_), *variables_map_);
+        opts::notify(*variables_map_);
 
-        if (_variables_map->count("help"))
+        if (variables_map_->count("help"))
             return;
 
-        if (! _variables_map->count("config_file_path"))
+        if (! variables_map_->count("config_file_path"))
             return;
 
-        _are_args_valid = true;
+        are_args_valid_ = true;
     }
     catch(std::exception &e) {
         std::cerr << "error: " << e.what() << "\n";
@@ -41,14 +41,14 @@ void CLIArgsParser::ParseCLIArgs(int argc, char **argv) {
 }
 
 void CLIArgsParser::ShowHelp() {
-    std::cout << *_description << "\n";
+    std::cout << *description_ << "\n";
 }
 
 bool CLIArgsParser::ArgsValid() {
-    return _are_args_valid;
+    return are_args_valid_;
 }
 
 std::string CLIArgsParser::GetConfigFilePath() {
-    auto config_file_path = (*_variables_map)["config_file_path"];
+    auto config_file_path = (*variables_map_)["config_file_path"];
     return config_file_path.as<std::string>();
 }

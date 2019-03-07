@@ -27,8 +27,8 @@ class HealthChecker: public std::enable_shared_from_this<HealthChecker> {
     boost::beast::http::request<boost::beast::http::empty_body> request_;
     boost::beast::http::response<boost::beast::http::string_body> response_;
     std::atomic<bool> healthy_ = false;
-    unsigned int _health_check_period;
-    std::string _health_check_endpoint;
+    unsigned int health_check_period_;
+    std::string health_check_endpoint_;
 
     void on_resolve(boost::beast::error_code error_code, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
     void on_connect(boost::beast::error_code error_code, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);

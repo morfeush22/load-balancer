@@ -47,8 +47,8 @@ class ConfigParser {
 
 
     private:
-    std::string _config_file_path;
-    boost::property_tree::ptree _property_tree;
+    std::string config_file_path_;
+    boost::property_tree::ptree property_tree_;
 
 };
 

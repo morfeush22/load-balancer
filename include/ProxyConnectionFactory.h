@@ -21,7 +21,7 @@ class ProxyConnectionFactory {
     std::shared_ptr<ProxyConnection> MakeProxyConnection();
 
     private:
-    boost::asio::io_context &_io_context;
+    boost::asio::io_context &io_context_;
     std::shared_ptr<ConfigParser> config_parser_;
     std::shared_ptr<BackendServersRepository> servers_repository_;
     std::shared_ptr<SchedulingStrategy> scheduling_strategy_;

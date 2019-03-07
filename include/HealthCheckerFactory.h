@@ -17,8 +17,8 @@ class HealthCheckerFactory {
     std::shared_ptr<HealthChecker> MakeHealthChecker();
 
     private:
-    boost::asio::io_context &_io_context;
-    std::shared_ptr<ConfigParser> _config_parser;
+    boost::asio::io_context &io_context_;
+    std::shared_ptr<ConfigParser> config_parser_;
 
 };
 
