@@ -13,8 +13,13 @@ const BackendServerDescription &
 SchedulingStrategy::SelectBackendServer(boost::beast::http::request<boost::beast::http::string_body> frontend_headers,
                                         const std::list<BackendServerDescription> &backend_server_description) {
     //if has cookie
-    //get server by id
-    //if server not empty, use it
+    //check list for server by id
+    //if server found, use it
     //else choose one from list
+
+    //BackendServerDescription server;
+    //foreach...
+    //if(!server)
+    //get one from scheduling algorithm
     return scheduling_algorithm_->SelectBackendServer(backend_server_description);
 }
