@@ -26,8 +26,8 @@ class ProxyConnection: public std::enable_shared_from_this<ProxyConnection> {
     boost::asio::ip::tcp::socket backend_socket_;
     boost::beast::flat_buffer buffer_;
     boost::beast::flat_buffer server_buffer_;
-    boost::beast::http::request<boost::beast::http::string_body > request_;
-    boost::beast::http::request<boost::beast::http::string_body > server_request_;
+    boost::beast::http::request<boost::beast::http::string_body> request_;
+    boost::beast::http::request<boost::beast::http::string_body> server_request_;
     boost::beast::http::response<boost::beast::http::string_body> response_;
     boost::beast::http::response<boost::beast::http::string_body> server_response_;
 

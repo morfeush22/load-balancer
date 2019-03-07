@@ -6,8 +6,8 @@
 #include "include/ProxyConnectionFactory.h"
 #include "include/FrontendServer.h"
 #include "include/Logger.h"
-#include "include/RoundRobinStrategy.h"
-#include "include/SchedulingStrategyRepository.h"
+#include "include/RoundRobin.h"
+#include "include/SchedulingStrategyBuilder.h"
 #include <memory>
 
 
@@ -22,14 +22,15 @@ int main(int argc, char **argv) {
 
     auto config_file_path = cli_args_parser->GetConfigFilePath();
     auto config_parser = std::make_shared<ConfigParser>(config_file_path);
+    //TODO IsConfigValid
     config_parser->ParseConfigFile();
 
     SET_LOGGING_LEVEL(config_parser->LogLevel());
 
     boost::asio::io_context io_context;
 
-    auto scheduling_strategy_repository = std::make_unique<SchedulingStrategyRepository>(config_parser);
-    auto strategy = scheduling_strategy_repository->GetSchedulingStrategy();
+    auto scheduling_strategy_builder = std::make_unique<SchedulingStrategyBuilder>(config_parser);
+    auto strategy = scheduling_strategy_builder->ConstructStrategy();
 
     auto health_checker_factory = std::make_unique<HealthCheckerFactory>(io_context, config_parser);
     auto servers_repository = std::make_shared<BackendServersRepository>(std::move(health_checker_factory), config_parser);

@@ -75,7 +75,7 @@ void ProxyConnection::on_read(boost::beast::error_code error_code, std::size_t b
         return;
     }
 
-    backend_server_ = scheduling_strategy_->SelectBackendServer(servers_list);
+    backend_server_ = scheduling_strategy_->SelectBackendServer(request_, servers_list);
 
     resolver_.async_resolve(
             backend_server_.address,

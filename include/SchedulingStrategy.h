@@ -5,13 +5,22 @@
 #ifndef LOAD_BALANCER_SCHEDULINGSTRATEGY_H
 #define LOAD_BALANCER_SCHEDULINGSTRATEGY_H
 
-
 #include "ConfigParser.h"
+#include "SchedulingAlgorithm.h"
+#include <boost/beast/http/string_body.hpp>
+
 
 class SchedulingStrategy {
 
     public:
-    virtual const BackendServerDescription & SelectBackendServer(const std::list<BackendServerDescription> & backend_server_description) = 0;
+    SchedulingStrategy(std::unique_ptr<SchedulingAlgorithm> &&scheduling_algorithm);
+    const BackendServerDescription & SelectBackendServer(
+            boost::beast::http::request<boost::beast::http::string_body> frontend_headers,
+            const std::list<BackendServerDescription> & backend_server_description);
+
+private:
+    std::unique_ptr<SchedulingAlgorithm> scheduling_algorithm_;
+
 };
 
 

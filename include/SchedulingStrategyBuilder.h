@@ -9,17 +9,15 @@
 #include "SchedulingStrategy.h"
 
 
-class SchedulingStrategyRepository {
+class SchedulingStrategyBuilder {
 
     public:
-    explicit SchedulingStrategyRepository(std::shared_ptr<ConfigParser> config_parser);
-    std::shared_ptr<SchedulingStrategy> GetSchedulingStrategy();
+    explicit SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser);
+    std::shared_ptr<SchedulingStrategy> ConstructStrategy();
 
     private:
-    std::shared_ptr<SchedulingStrategy> scheduling_strategy_;
     std::string algorithm_;
 
-    void ConstructStrategy();
 };
 
 

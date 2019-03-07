@@ -6,14 +6,15 @@
 #define LOAD_BALANCER_ROUNDROBINSTRATEGY_H
 
 #include "SchedulingStrategy.h"
+#include "SchedulingAlgorithm.h"
 #include "../include/ConfigParser.h"
 
 
-class RoundRobinStrategy: public SchedulingStrategy {
+class RoundRobin: public SchedulingAlgorithm {
 
     public:
     //TODO implementation
-    const BackendServerDescription & SelectBackendServer(const std::list<BackendServerDescription> & backend_server_description);
+    const BackendServerDescription & SelectBackendServer(const std::list<BackendServerDescription> & backend_server_description) override;
 
 };
 
