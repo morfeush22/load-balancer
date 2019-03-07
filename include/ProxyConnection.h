@@ -34,6 +34,7 @@ class ProxyConnection: public std::enable_shared_from_this<ProxyConnection> {
     std::shared_ptr<BackendServersRepository> servers_repository_;
     std::shared_ptr<SchedulingStrategy> scheduling_strategy_;
     std::string backend_cookie_name_;
+    BackendServerDescription backend_server_;
 
     void on_read(boost::beast::error_code error_code, std::size_t bytes_transferred);
     void on_resolve(boost::beast::error_code error_code, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);

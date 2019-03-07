@@ -24,6 +24,10 @@ struct BackendServerDescription {
 
         return stream;
     }
+
+    operator bool() const {
+        return id.empty() && address.empty() && port.empty();
+    }
 };
 
 class ConfigParser {

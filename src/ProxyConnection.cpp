@@ -75,11 +75,11 @@ void ProxyConnection::on_read(boost::beast::error_code error_code, std::size_t b
         return;
     }
 
-    auto server = scheduling_strategy_->SelectBackendServer(servers_list);
+    backend_server_ = scheduling_strategy_->SelectBackendServer(servers_list);
 
     resolver_.async_resolve(
-            server.address,
-            server.port,
+            backend_server_.address,
+            backend_server_.port,
             boost::bind(
                     &ProxyConnection::on_resolve,
                     shared_from_this(),
