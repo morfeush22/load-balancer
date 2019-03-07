@@ -1,18 +1,20 @@
+#include "include/BackendServersRepository.h"
 #include "include/CLIArgsParser.h"
 #include "include/ConfigParser.h"
+#include "include/FrontendServer.h"
 #include "include/HealthChecker.h"
 #include "include/HealthCheckerFactory.h"
-#include "include/BackendServersRepository.h"
-#include "include/ProxyConnectionFactory.h"
-#include "include/FrontendServer.h"
 #include "include/Logger.h"
+#include "include/ProxyConnectionFactory.h"
 #include "include/RoundRobin.h"
 #include "include/SchedulingStrategyBuilder.h"
 #include <memory>
 
+using namespace std;
+
 
 int main(int argc, char **argv) {
-    auto cli_args_parser = std::make_unique<CLIArgsParser>();
+    auto cli_args_parser = make_unique<CLIArgsParser>();
     cli_args_parser->ParseCLIArgs(argc, argv);
 
     if (! cli_args_parser->ArgsValid()) {
@@ -21,23 +23,34 @@ int main(int argc, char **argv) {
     }
 
     auto config_file_path = cli_args_parser->GetConfigFilePath();
-    auto config_parser = std::make_shared<ConfigParser>(config_file_path);
-    //TODO IsConfigValid
+    auto config_parser = make_shared<ConfigParser>(config_file_path);
     config_parser->ParseConfigFile();
+
+    if (! config_parser->IsConfigValid()) {
+        ERROR("invalid config file");
+        return 1;
+    }
 
     SET_LOGGING_LEVEL(config_parser->LogLevel());
 
     boost::asio::io_context io_context;
 
-    auto scheduling_strategy_builder = std::make_unique<SchedulingStrategyBuilder>(config_parser);
-    auto strategy = scheduling_strategy_builder->ConstructStrategy();
+    auto health_checker_factory = make_unique<HealthCheckerFactory>(io_context, config_parser);
+    auto backend_servers_repository = make_shared<BackendServersRepository>(
+            move(health_checker_factory),
+            config_parser);
 
-    auto health_checker_factory = std::make_unique<HealthCheckerFactory>(io_context, config_parser);
-    auto servers_repository = std::make_shared<BackendServersRepository>(std::move(health_checker_factory), config_parser);
-    auto proxy_connection_factory = std::make_unique<ProxyConnectionFactory>(io_context, config_parser, servers_repository, strategy);
-    auto load_balancer = std::make_shared<FrontendServer>(io_context, config_parser, move(proxy_connection_factory));
+    auto scheduling_strategy_builder = make_unique<SchedulingStrategyBuilder>(config_parser);
+    auto scheduling_strategy = scheduling_strategy_builder->ConstructSchedulingStrategy();
 
-    load_balancer->run();
+    auto proxy_connection_factory = make_unique<ProxyConnectionFactory>(
+            io_context,
+            config_parser,
+            backend_servers_repository,
+            scheduling_strategy);
+    auto frontend_server = make_shared<FrontendServer>(io_context, config_parser, move(proxy_connection_factory));
+
+    frontend_server->run();
     io_context.run();
 
     return 0;

@@ -12,9 +12,12 @@
 
 class RoundRobin: public SchedulingAlgorithm {
 
-    public:
-    //TODO implementation
-    const BackendServerDescription & SelectBackendServer(const std::list<BackendServerDescription> & backend_server_description) override;
+public:
+    const BackendServerDescription & SelectBackendServer(
+            const std::list<BackendServerDescription> & backend_server_description) override;
+    void UpdateBackendServerStatistics(
+            const BackendServerDescription &SelectBackendServer,
+            std::size_t bytes_transferred) override;
 
 };
 

@@ -13,7 +13,7 @@ class SchedulingStrategyBuilder {
 
     public:
     explicit SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser);
-    std::shared_ptr<SchedulingStrategy> ConstructStrategy();
+    std::shared_ptr<SchedulingStrategy> ConstructSchedulingStrategy();
 
     private:
     std::string algorithm_;

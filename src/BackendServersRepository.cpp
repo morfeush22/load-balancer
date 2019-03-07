@@ -7,8 +7,8 @@
 using namespace std;
 
 
-BackendServersRepository::BackendServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory,
-                                     std::shared_ptr<ConfigParser> config_parser):
+BackendServersRepository::BackendServersRepository(unique_ptr<HealthCheckerFactory> &&health_checker_factory,
+                                                   std::shared_ptr<ConfigParser> config_parser):
                                      health_checker_factory_(move(health_checker_factory)),
                                      config_parser_(move(config_parser))
 {
@@ -24,19 +24,6 @@ void BackendServersRepository::StartHealthChecking() {
             health_checkers_[server.id] = health_checker;
         }
     }
-}
-
-//TODO return empty object rather than optional
-boost::optional<BackendServerDescription> BackendServersRepository::GetServer(string id) {
-    for (const auto &server: backend_servers_) {
-        if (server.id == id) {
-            if (! server.health_check || health_checkers_[id]->healthy()) {
-                return server;
-            }
-        }
-    }
-
-    return boost::none;
 }
 
 list<BackendServerDescription> BackendServersRepository::GetAllServers() {

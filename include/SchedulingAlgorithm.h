@@ -11,7 +11,8 @@ class SchedulingAlgorithm {
 public:
     virtual const BackendServerDescription &SelectBackendServer(
             const std::list <BackendServerDescription> &backend_server_description) = 0;
-
+    virtual void UpdateBackendServerStatistics(const BackendServerDescription &SelectBackendServer,
+            std::size_t bytes_transferred) = 0;
 
 };
 

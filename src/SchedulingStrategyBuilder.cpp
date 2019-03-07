@@ -8,10 +8,10 @@
 
 SchedulingStrategyBuilder::SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser) {
     algorithm_ = config_parser->BackendAlorithm();
-    ConstructStrategy();
+    ConstructSchedulingStrategy();
 }
 
-std::shared_ptr<SchedulingStrategy> SchedulingStrategyBuilder::ConstructStrategy() {
+std::shared_ptr<SchedulingStrategy> SchedulingStrategyBuilder::ConstructSchedulingStrategy() {
     if (algorithm_ == "round_robin") {
         return std::make_shared<SchedulingStrategy>(std::make_unique<RoundRobin>());
     }

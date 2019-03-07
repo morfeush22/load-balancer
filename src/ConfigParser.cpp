@@ -69,4 +69,8 @@ std::string ConfigParser::LogLevel() {
     return _property_tree.get<string>("all.log_level");
 }
 
+bool ConfigParser::IsConfigValid() {
+    return true;
+}
+
 

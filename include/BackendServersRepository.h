@@ -14,8 +14,8 @@
 class BackendServersRepository {
 
     public:
-    BackendServersRepository(std::unique_ptr<HealthCheckerFactory> health_checker_factory, std::shared_ptr<ConfigParser> config_parser);
-    boost::optional<BackendServerDescription> GetServer(std::string id);
+    BackendServersRepository(std::unique_ptr<HealthCheckerFactory> &&health_checker_factory,
+                             std::shared_ptr<ConfigParser> config_parser);
     std::list<BackendServerDescription> GetAllServers();
 
     private:

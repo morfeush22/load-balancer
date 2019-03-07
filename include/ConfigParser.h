@@ -35,6 +35,7 @@ class ConfigParser {
     public:
     explicit ConfigParser(std::string config_file_path);
     void ParseConfigFile();
+    bool IsConfigValid();
     std::string LogLevel();
     std::string FrontendAdress();
     std::string FrontendPort();

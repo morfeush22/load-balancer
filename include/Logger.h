@@ -21,8 +21,8 @@ namespace logger {
     enum severity_type
     {
         debug = 1,
-        error,
-        warning
+        warning,
+        error
     };
 
     class Logger {
@@ -49,7 +49,7 @@ namespace logger {
             return header.str();
         }
         std::stringstream log_stream;
-        severity_type severity_ = severity_type::debug;
+        severity_type severity_ = severity_type::error;
 
         //Core printing functionality
         void print_impl() {
