@@ -5,8 +5,8 @@
 #ifndef LOAD_BALANCER_HEALTHCHECKERFACTORY_H
 #define LOAD_BALANCER_HEALTHCHECKERFACTORY_H
 
-#include "../include/ConfigParser.h"
-#include "../include/HealthChecker.h"
+#include "ConfigParser.h"
+#include "HealthChecker.h"
 #include <boost/asio.hpp>
 
 

@@ -13,28 +13,25 @@ using namespace std;
 using tcp = boost::asio::ip::tcp;
 
 
-ProxyConnection::ProxyConnection(
-        boost::asio::io_context &io_context,
-        std::shared_ptr<BackendServersRepository> backend_servers_repository,
-        std::shared_ptr<SchedulingStrategy> scheduling_strategy,
-        std::string backend_cookie_name):
+ProxyConnection::ProxyConnection(boost::asio::io_context &io_context,
+                                 std::shared_ptr<BackendServersRepository> backend_servers_repository,
+                                 std::shared_ptr<SchedulingStrategy> scheduling_strategy) :
 resolver_(io_context),
-frontend_socket_(io_context),
-backend_socket_(io_context),
-servers_repository_(move(backend_servers_repository)),
-scheduling_strategy_(move(scheduling_strategy)),
-backend_cookie_name_(move(backend_cookie_name))
+client_socket_(io_context),
+server_socket_(io_context),
+backend_servers_repository_(move(backend_servers_repository)),
+scheduling_strategy_(move(scheduling_strategy))
 {}
 
 boost::asio::ip::tcp::socket &ProxyConnection::FrontendSocket() {
-    return frontend_socket_;
+    return client_socket_;
 }
 
 void ProxyConnection::run() {
     client_request_ = {};
 
     http::async_read(
-            frontend_socket_,
+            client_socket_,
             client_buffer_,
             client_request_,
             boost::bind(
@@ -45,7 +42,7 @@ void ProxyConnection::run() {
             )
     );
 
-    DEBUG("new connection from: ", boost::lexical_cast<std::string>(frontend_socket_.remote_endpoint()));
+    DEBUG("new connection from: ", boost::lexical_cast<std::string>(client_socket_.remote_endpoint()));
 }
 
 void ProxyConnection::on_client_read(boost::beast::error_code error_code, std::size_t bytes_transferred) {
@@ -60,18 +57,18 @@ void ProxyConnection::on_client_read(boost::beast::error_code error_code, std::s
         return;
     }
 
-    auto servers_list = servers_repository_->GetAllServers();
+    auto servers_list = backend_servers_repository_->GetAllServers();
     if (servers_list.empty()) {
         WARNING("no feasible backend servers to route connection");
         return do_close();
     }
 
     server_request_ = client_request_;
-    backend_server_ = scheduling_strategy_->SelectBackendServer(server_request_, servers_list);
+    backend_server_description_ = scheduling_strategy_->SelectBackendServer(server_request_, servers_list);
 
     resolver_.async_resolve(
-            backend_server_.address,
-            backend_server_.port,
+            backend_server_description_.address,
+            backend_server_description_.port,
             boost::bind(
                     &ProxyConnection::on_server_resolve,
                     shared_from_this(),
@@ -83,7 +80,7 @@ void ProxyConnection::on_client_read(boost::beast::error_code error_code, std::s
 
 void ProxyConnection::do_close() {
     beast::error_code ec;
-    frontend_socket_.shutdown(tcp::socket::shutdown_send, ec);
+    client_socket_.shutdown(tcp::socket::shutdown_send, ec);
 }
 
 void ProxyConnection::on_server_resolve(boost::beast::error_code error_code,
@@ -91,7 +88,7 @@ void ProxyConnection::on_server_resolve(boost::beast::error_code error_code,
     if (! error_code) {
         tcp::endpoint endpoint = *endpoint_iterator;
 
-        backend_socket_.async_connect(
+        server_socket_.async_connect(
                 endpoint,
                 boost::bind(
                         &ProxyConnection::on_server_connect,
@@ -109,7 +106,7 @@ void ProxyConnection::on_server_connect(boost::beast::error_code error_code,
                                         boost::asio::ip::tcp::resolver::iterator endpoint_iterator) {
     if (! error_code) {
         http::async_write(
-                backend_socket_,
+                server_socket_,
                 server_request_,
                 boost::bind(
                         &ProxyConnection::on_server_write,
@@ -120,10 +117,10 @@ void ProxyConnection::on_server_connect(boost::beast::error_code error_code,
         );
     }
     else if (endpoint_iterator != tcp::resolver::iterator()) {
-        backend_socket_.close();
+        server_socket_.close();
         tcp::endpoint endpoint = *endpoint_iterator;
 
-        backend_socket_.async_connect(
+        server_socket_.async_connect(
                 endpoint,
                 boost::bind(
                         &ProxyConnection::on_server_connect,
@@ -143,7 +140,7 @@ void ProxyConnection::on_server_write(boost::beast::error_code error_code, std::
 
     if (! error_code) {
         http::async_read(
-                backend_socket_,
+                server_socket_,
                 server_buffer_,
                 server_response_,
                 boost::bind(
@@ -162,11 +159,11 @@ void ProxyConnection::on_server_read(boost::beast::error_code error_code, std::s
     boost::ignore_unused(bytes_transferred);
 
     if (! error_code) {
-        backend_socket_.shutdown(tcp::socket::shutdown_both, error_code);
+        server_socket_.shutdown(tcp::socket::shutdown_both, error_code);
         client_response_ = server_response_;
 
         http::async_write(
-                frontend_socket_,
+                client_socket_,
                 client_response_,
                 boost::bind(
                         &ProxyConnection::on_client_write,

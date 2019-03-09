@@ -5,9 +5,9 @@
 #ifndef LOAD_BALANCER_ROUNDROBINSTRATEGY_H
 #define LOAD_BALANCER_ROUNDROBINSTRATEGY_H
 
-#include "SchedulingStrategy.h"
+#include "ConfigParser.h"
 #include "SchedulingAlgorithm.h"
-#include "../include/ConfigParser.h"
+#include "SchedulingStrategy.h"
 
 
 class RoundRobin: public SchedulingAlgorithm {

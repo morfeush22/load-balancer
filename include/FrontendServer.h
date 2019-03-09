@@ -5,8 +5,8 @@
 #ifndef LOAD_BALANCER_SERVER_H
 #define LOAD_BALANCER_SERVER_H
 
-#include "../include/ConfigParser.h"
-#include "../include/ProxyConnectionFactory.h"
+#include "ConfigParser.h"
+#include "ProxyConnectionFactory.h"
 #include <boost/asio.hpp>
 #include <boost/beast/core/error.hpp>
 

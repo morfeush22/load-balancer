@@ -5,7 +5,7 @@
 #ifndef LOAD_BALANCER_HEALTHCHECKER_H
 #define LOAD_BALANCER_HEALTHCHECKER_H
 
-#include "../include/ConfigParser.h"
+#include "ConfigParser.h"
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/beast.hpp>

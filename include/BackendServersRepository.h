@@ -5,8 +5,8 @@
 #ifndef LOAD_BALANCER_SERVERSREPOSITORY_H
 #define LOAD_BALANCER_SERVERSREPOSITORY_H
 
-#include "../include/ConfigParser.h"
-#include "../include/HealthCheckerFactory.h"
+#include "ConfigParser.h"
+#include "HealthCheckerFactory.h"
 #include <boost/optional.hpp>
 #include <string>
 

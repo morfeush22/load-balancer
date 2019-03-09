@@ -16,5 +16,5 @@ scheduling_strategy_(move(scheduling_strategy))
 {}
 
 std::shared_ptr<ProxyConnection> ProxyConnectionFactory::MakeProxyConnection() {
-    return std::make_shared<ProxyConnection>(io_context_, servers_repository_, scheduling_strategy_, config_parser_->BackendCookieName());
+    return std::make_shared<ProxyConnection>(io_context_, servers_repository_, scheduling_strategy_);
 }
