@@ -14,6 +14,7 @@ struct BackendServerDescription {
     std::string id;
     std::string address;
     std::string port;
+    unsigned int weight = 1;
     bool health_check;
 
     friend std::ostream &operator<<(std::ostream &stream, const BackendServerDescription &desc) {

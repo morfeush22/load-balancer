@@ -20,7 +20,7 @@ public:
 
     void run(std::string host, std::string port);
 
-    bool healthy();
+    bool Healthy();
 
 private:
     boost::beast::flat_buffer buffer_;

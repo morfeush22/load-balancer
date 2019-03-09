@@ -18,7 +18,7 @@ public:
 
 private:
     std::string algorithm_;
-    std::string cookie_name_;
+    std::string backend_cookie_name_;
 
 };
 

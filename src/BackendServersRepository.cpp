@@ -29,7 +29,7 @@ list<BackendServerDescription> BackendServersRepository::GetAllServers() {
     list<BackendServerDescription> servers;
 
     for (const auto &server: backend_servers_) {
-        if (!server.health_check || health_checkers_[server.id]->healthy()) {
+        if (!server.health_check || health_checkers_[server.id]->Healthy()) {
             servers.emplace_back(server);
         }
     }

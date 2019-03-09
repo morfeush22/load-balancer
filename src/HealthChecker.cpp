@@ -138,6 +138,6 @@ void HealthChecker::on_read(beast::error_code error_code, size_t bytes_transferr
     }
 }
 
-bool HealthChecker::healthy() {
+bool HealthChecker::Healthy() {
     return healthy_;
 }
