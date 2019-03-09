@@ -14,7 +14,7 @@ using namespace std;
 using tcp = boost::asio::ip::tcp;
 
 
-HealthChecker::HealthChecker(boost::asio::io_context &io_context, std::string health_check_endpoint,
+HealthChecker::HealthChecker(boost::asio::io_context &io_context, string health_check_endpoint,
                              unsigned int health_check_period) :
         deadline_timer_(io_context),
         health_check_endpoint_(move(health_check_endpoint)),
@@ -23,7 +23,7 @@ HealthChecker::HealthChecker(boost::asio::io_context &io_context, std::string he
         socket_(io_context) {
 }
 
-void HealthChecker::run(std::string host, std::string port) {
+void HealthChecker::run(string host, string port) {
     request_.method(http::verb::get);
     request_.set(http::field::host, host);
     request_.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
@@ -107,7 +107,7 @@ void HealthChecker::on_connect(beast::error_code error_code, tcp::resolver::iter
     }
 }
 
-void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_transferred) {
+void HealthChecker::on_write(beast::error_code error_code, size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
     if (!error_code) {
@@ -127,7 +127,7 @@ void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_tra
     }
 }
 
-void HealthChecker::on_read(beast::error_code error_code, std::size_t bytes_transferred) {
+void HealthChecker::on_read(beast::error_code error_code, size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
     if (!error_code) {

@@ -8,15 +8,16 @@
 #include <string>
 
 namespace opts = boost::program_options;
+using namespace std;
 
 
 CLIArgsParser::CLIArgsParser() {
-    description_ = std::make_unique<opts::options_description>("Allowed options");
-    variables_map_ = std::make_unique<opts::variables_map>();
+    description_ = make_unique<opts::options_description>("Allowed options");
+    variables_map_ = make_unique<opts::variables_map>();
 
     description_->add_options()
             ("help", "produce help message")
-            ("config_file_path", opts::value<std::string>(), "set path to config file");
+            ("config_file_path", opts::value<string>(), "set path to config file");
 }
 
 void CLIArgsParser::ParseCLIArgs(int argc, char **argv) {
@@ -32,23 +33,23 @@ void CLIArgsParser::ParseCLIArgs(int argc, char **argv) {
 
         args_valid_ = true;
     }
-    catch (std::exception &e) {
-        std::cerr << "error: " << e.what() << "\n";
+    catch (exception &e) {
+        cerr << "error: " << e.what() << "\n";
     }
     catch (...) {
-        std::cerr << "Exception of unknown type!\n";
+        cerr << "Exception of unknown type!\n";
     }
 }
 
 void CLIArgsParser::ShowHelp() {
-    std::cout << *description_ << "\n";
+    cout << *description_ << "\n";
 }
 
 bool CLIArgsParser::ArgsValid() {
     return args_valid_;
 }
 
-std::string CLIArgsParser::GetConfigFilePath() {
+string CLIArgsParser::GetConfigFilePath() {
     auto config_file_path = (*variables_map_)["config_file_path"];
-    return config_file_path.as<std::string>();
+    return config_file_path.as<string>();
 }

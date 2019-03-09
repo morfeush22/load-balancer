@@ -14,8 +14,8 @@ using tcp = boost::asio::ip::tcp;
 
 
 ProxyConnection::ProxyConnection(boost::asio::io_context &io_context,
-                                 std::shared_ptr<BackendServersRepository> backend_servers_repository,
-                                 std::shared_ptr<SchedulingStrategy> scheduling_strategy) :
+                                 shared_ptr<BackendServersRepository> backend_servers_repository,
+                                 shared_ptr<SchedulingStrategy> scheduling_strategy) :
 resolver_(io_context),
 client_socket_(io_context),
 server_socket_(io_context),
@@ -42,10 +42,10 @@ void ProxyConnection::run() {
             )
     );
 
-    DEBUG("new connection from: ", boost::lexical_cast<std::string>(client_socket_.remote_endpoint()));
+    DEBUG("new connection from: ", boost::lexical_cast<string>(client_socket_.remote_endpoint()));
 }
 
-void ProxyConnection::on_client_read(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+void ProxyConnection::on_client_read(boost::beast::error_code error_code, size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
     if(error_code == http::error::end_of_stream) {
@@ -64,6 +64,7 @@ void ProxyConnection::on_client_read(boost::beast::error_code error_code, std::s
     }
 
     server_request_ = client_request_;
+    //TODO pass bytes transferred to scheduling strategy
     backend_server_description_ = scheduling_strategy_->SelectBackendServer(server_request_, servers_list);
 
     resolver_.async_resolve(
@@ -135,7 +136,7 @@ void ProxyConnection::on_server_connect(boost::beast::error_code error_code,
 
 }
 
-void ProxyConnection::on_server_write(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+void ProxyConnection::on_server_write(boost::beast::error_code error_code, size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
     if (! error_code) {
@@ -155,7 +156,7 @@ void ProxyConnection::on_server_write(boost::beast::error_code error_code, std::
     }
 }
 
-void ProxyConnection::on_server_read(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+void ProxyConnection::on_server_read(boost::beast::error_code error_code, size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
     if (! error_code) {
@@ -177,7 +178,7 @@ void ProxyConnection::on_server_read(boost::beast::error_code error_code, std::s
     }
 }
 
-void ProxyConnection::on_client_write(boost::beast::error_code error_code, std::size_t bytes_transferred) {
+void ProxyConnection::on_client_write(boost::beast::error_code error_code, size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
     if (! error_code) {

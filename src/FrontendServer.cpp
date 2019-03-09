@@ -7,10 +7,11 @@
 #include <boost/lexical_cast.hpp>
 
 namespace asio = boost::asio;
+using namespace std;
 
 
-FrontendServer::FrontendServer(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser,
-                               std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory) :
+FrontendServer::FrontendServer(boost::asio::io_context &io_context, shared_ptr<ConfigParser> config_parser,
+                               unique_ptr<ProxyConnectionFactory> proxy_connection_factory) :
         io_context_(io_context),
         acceptor_(io_context),
         endpoint_(asio::ip::make_address_v4(config_parser->FrontendAddress()),
@@ -68,7 +69,7 @@ void FrontendServer::do_accept() {
 
 }
 
-void FrontendServer::on_accept(std::shared_ptr<ProxyConnection> proxy_connection, boost::beast::error_code error_code) {
+void FrontendServer::on_accept(shared_ptr<ProxyConnection> proxy_connection, boost::beast::error_code error_code) {
     if (!error_code) {
         proxy_connection->run();
         do_accept();

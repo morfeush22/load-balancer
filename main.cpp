@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 
     if (! cli_args_parser->ArgsValid()) {
         cli_args_parser->ShowHelp();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     auto config_file_path = cli_args_parser->GetConfigFilePath();
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 
     if (! config_parser->IsConfigValid()) {
         ERROR("invalid config file");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     SET_LOGGING_LEVEL(config_parser->LogLevel());
@@ -52,5 +52,5 @@ int main(int argc, char **argv) {
     frontend_server->run();
     io_context.run();
 
-    return 0;
+    return EXIT_SUCCESS;
 }

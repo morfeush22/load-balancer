@@ -9,7 +9,7 @@ using namespace std;
 
 BackendServersRepository::BackendServersRepository(
         unique_ptr<HealthCheckerFactory> &&health_checker_factory,
-        std::shared_ptr<ConfigParser> config_parser) :
+        shared_ptr<ConfigParser> config_parser) :
         health_checker_factory_(move(health_checker_factory)),
         backend_servers_(config_parser->BackendServers()) {
     StartHealthChecking();

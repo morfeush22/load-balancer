@@ -18,18 +18,18 @@ void ConfigParser::ParseConfigFile() {
     prop_tree::ini_parser::read_ini(config_file_path_, property_tree_);
 }
 
-std::string ConfigParser::FrontendAddress() {
+string ConfigParser::FrontendAddress() {
     return property_tree_.get<string>("frontend.address");
 }
 
-std::string ConfigParser::FrontendPort() {
+string ConfigParser::FrontendPort() {
     return property_tree_.get<string>("frontend.port");
 }
 
 list<BackendServerDescription> ConfigParser::BackendServers() {
     list<BackendServerDescription> servers;
 
-    auto servers_config = property_tree_.get<std::string>("backend.servers");
+    auto servers_config = property_tree_.get<string>("backend.servers");
     vector<string> servers_references;
     boost::split(servers_references, servers_config, boost::is_any_of(","));
 
@@ -53,19 +53,19 @@ unsigned int ConfigParser::BackendHealthCheckPeriod() {
     return property_tree_.get<unsigned int>("backend.health_check_period");
 }
 
-std::string ConfigParser::BackendHealthCheckEndpoint() {
+string ConfigParser::BackendHealthCheckEndpoint() {
     return property_tree_.get<string>("backend.health_check_endpoint");
 }
 
-std::string ConfigParser::BackendAlgorithm() {
+string ConfigParser::BackendAlgorithm() {
     return property_tree_.get<string>("backend.algorithm");
 }
 
-std::string ConfigParser::BackendCookieName() {
+string ConfigParser::BackendCookieName() {
     return property_tree_.get<string>("backend.cookie_name");
 }
 
-std::string ConfigParser::LogLevel() {
+string ConfigParser::LogLevel() {
     return property_tree_.get<string>("all.log_level");
 }
 
