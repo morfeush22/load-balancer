@@ -7,20 +7,20 @@
 
 #define HTTP_VERSION 10
 
+namespace asio = boost::asio;
 namespace beast = boost::beast;
 namespace http = beast::http;
-namespace asio = boost::asio;
 using namespace std;
 using tcp = boost::asio::ip::tcp;
 
 
-HealthChecker::HealthChecker(boost::asio::io_context &io_context, unsigned int health_check_period, string health_check_endpoint):
-deadline_timer_(io_context),
-resolver_(io_context),
-socket_(io_context)
-{
-    health_check_period_ = health_check_period;
-    health_check_endpoint_ = move(health_check_endpoint);
+HealthChecker::HealthChecker(boost::asio::io_context &io_context, unsigned int health_check_period,
+                             string health_check_endpoint) :
+        deadline_timer_(io_context),
+        health_check_endpoint_(move(health_check_endpoint)),
+        health_check_period_(health_check_period),
+        resolver_(io_context),
+        socket_(io_context) {
 }
 
 void HealthChecker::run(std::string host, std::string port) {
@@ -30,10 +30,9 @@ void HealthChecker::run(std::string host, std::string port) {
     request_.target(health_check_endpoint_);
     request_.version(HTTP_VERSION);
 
-    if (! healthy_) {
+    if (!healthy_) {
         WARNING("backend server is NOT healthy: ", host, ":", port, health_check_endpoint_);
-    }
-    else {
+    } else {
         DEBUG("backend server is responding: ", host, ":", port, health_check_endpoint_);
     }
 
@@ -47,8 +46,8 @@ void HealthChecker::run(std::string host, std::string port) {
                     shared_from_this(),
                     asio::placeholders::error,
                     asio::placeholders::iterator
-                    )
-            );
+            )
+    );
 
 
     deadline_timer_.expires_from_now(boost::posix_time::seconds(health_check_period_));
@@ -58,12 +57,12 @@ void HealthChecker::run(std::string host, std::string port) {
                     shared_from_this(),
                     host,
                     port
-                    )
-            );
+            )
+    );
 }
 
 void HealthChecker::on_resolve(beast::error_code error_code, tcp::resolver::iterator endpoint_iterator) {
-    if (! error_code) {
+    if (!error_code) {
         tcp::endpoint endpoint = *endpoint_iterator;
         socket_.async_connect(
                 endpoint,
@@ -72,16 +71,15 @@ void HealthChecker::on_resolve(beast::error_code error_code, tcp::resolver::iter
                         shared_from_this(),
                         asio::placeholders::error,
                         ++endpoint_iterator
-                        )
-                );
-    }
-    else {
+                )
+        );
+    } else {
         healthy_ = false;
     }
 }
 
 void HealthChecker::on_connect(beast::error_code error_code, tcp::resolver::iterator endpoint_iterator) {
-    if (! error_code) {
+    if (!error_code) {
         http::async_write(
                 socket_,
                 request_,
@@ -90,10 +88,9 @@ void HealthChecker::on_connect(beast::error_code error_code, tcp::resolver::iter
                         shared_from_this(),
                         asio::placeholders::error,
                         asio::placeholders::bytes_transferred
-                        )
-                );
-    }
-    else if (endpoint_iterator != tcp::resolver::iterator()) {
+                )
+        );
+    } else if (endpoint_iterator != tcp::resolver::iterator()) {
         socket_.close();
         tcp::endpoint endpoint = *endpoint_iterator;
         socket_.async_connect(
@@ -105,8 +102,7 @@ void HealthChecker::on_connect(beast::error_code error_code, tcp::resolver::iter
                         ++endpoint_iterator
                 )
         );
-    }
-    else {
+    } else {
         healthy_ = false;
     }
 }
@@ -114,7 +110,7 @@ void HealthChecker::on_connect(beast::error_code error_code, tcp::resolver::iter
 void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
-    if (! error_code) {
+    if (!error_code) {
         http::async_read(
                 socket_,
                 buffer_,
@@ -124,10 +120,9 @@ void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_tra
                         shared_from_this(),
                         asio::placeholders::error,
                         asio::placeholders::bytes_transferred
-                        )
-                );
-    }
-    else {
+                )
+        );
+    } else {
         healthy_ = false;
     }
 }
@@ -135,11 +130,10 @@ void HealthChecker::on_write(beast::error_code error_code, std::size_t bytes_tra
 void HealthChecker::on_read(beast::error_code error_code, std::size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 
-    if (! error_code) {
+    if (!error_code) {
         healthy_ = response_.result() == beast::http::status::ok;
         socket_.shutdown(tcp::socket::shutdown_both, error_code);
-    }
-    else {
+    } else {
         healthy_ = false;
     }
 }

@@ -20,10 +20,10 @@ public:
     void run();
 
 private:
-    boost::asio::io_context &io_context_;
-    std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory_;
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::endpoint endpoint_;
+    boost::asio::io_context &io_context_;
+    std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory_;
 
     void do_accept();
 
