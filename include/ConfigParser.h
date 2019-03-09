@@ -16,11 +16,11 @@ struct BackendServerDescription {
     std::string port;
     bool health_check;
 
-    friend std::ostream & operator<<(std::ostream &stream, const BackendServerDescription &desc) {
+    friend std::ostream &operator<<(std::ostream &stream, const BackendServerDescription &desc) {
         stream << "server_id:\t" << desc.id << "\n"
-            << "\t\t" << desc.address << "\n"
-            << "\t\t" << desc.port << "\n"
-            << "\t\t" << desc.health_check << "\n";
+               << "\t\t" << desc.address << "\n"
+               << "\t\t" << desc.port << "\n"
+               << "\t\t" << desc.health_check << "\n";
 
         return stream;
     }
@@ -32,21 +32,31 @@ struct BackendServerDescription {
 
 class ConfigParser {
 
-    public:
+public:
     explicit ConfigParser(std::string config_file_path);
+
     void ParseConfigFile();
+
     bool IsConfigValid();
+
     std::string LogLevel();
-    std::string FrontendAdress();
+
+    std::string FrontendAddress();
+
     std::string FrontendPort();
+
     std::list<BackendServerDescription> BackendServers();
+
     unsigned int BackendHealthCheckPeriod();
+
     std::string BackendHealthCheckEndpoint();
-    std::string BackendAlorithm();
+
+    std::string BackendAlgorithm();
+
     std::string BackendCookieName();
 
 
-    private:
+private:
     std::string config_file_path_;
     boost::property_tree::ptree property_tree_;
 

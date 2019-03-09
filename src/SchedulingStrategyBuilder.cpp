@@ -7,8 +7,8 @@
 #include "../include/Logger.h"
 
 SchedulingStrategyBuilder::SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser):
-algorithm_(config_parser->BackendAlorithm()),
-cookie_name_(config_parser->BackendAlorithm())
+algorithm_(config_parser->BackendAlgorithm()),
+cookie_name_(config_parser->BackendAlgorithm())
 {}
 
 std::shared_ptr<SchedulingStrategy> SchedulingStrategyBuilder::ConstructSchedulingStrategy() {

@@ -18,7 +18,7 @@ void ConfigParser::ParseConfigFile() {
     prop_tree::ini_parser::read_ini(config_file_path_, property_tree_);
 }
 
-std::string ConfigParser::FrontendAdress() {
+std::string ConfigParser::FrontendAddress() {
     return property_tree_.get<string>("frontend.address");
 }
 
@@ -27,24 +27,24 @@ std::string ConfigParser::FrontendPort() {
 }
 
 list<BackendServerDescription> ConfigParser::BackendServers() {
-   list<BackendServerDescription> servers;
+    list<BackendServerDescription> servers;
 
-   auto s = property_tree_.get<std::string>("backend.servers");
-   vector<string> ss;
-   boost::split(ss, s, boost::is_any_of(","));
+    auto servers_config = property_tree_.get<std::string>("backend.servers");
+    vector<string> servers_references;
+    boost::split(servers_references, servers_config, boost::is_any_of(","));
 
-   for (auto &id: ss) {
-       BackendServerDescription desc;
+    for (auto &id: servers_references) {
+        BackendServerDescription desc;
 
-       desc.id = id;
+        desc.id = id;
 
-       auto child = property_tree_.get_child(id);
-       desc.address = child.get<string>("address");
-       desc.port = child.get<string>("port");
-       desc.health_check = child.get<bool>("health_check");
+        auto child = property_tree_.get_child(id);
+        desc.address = child.get<string>("address");
+        desc.port = child.get<string>("port");
+        desc.health_check = child.get<bool>("health_check");
 
-       servers.push_back(move(desc));
-   }
+        servers.push_back(move(desc));
+    }
 
     return servers;
 }
@@ -57,7 +57,7 @@ std::string ConfigParser::BackendHealthCheckEndpoint() {
     return property_tree_.get<string>("backend.health_check_endpoint");
 }
 
-std::string ConfigParser::BackendAlorithm() {
+std::string ConfigParser::BackendAlgorithm() {
     return property_tree_.get<string>("backend.algorithm");
 }
 
@@ -70,6 +70,7 @@ std::string ConfigParser::LogLevel() {
 }
 
 bool ConfigParser::IsConfigValid() {
+    //TODO implementation
     return true;
 }
 

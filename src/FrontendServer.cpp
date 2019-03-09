@@ -11,7 +11,7 @@ namespace asio = boost::asio;
 FrontendServer::FrontendServer(boost::asio::io_context & io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory):
 io_context_(io_context),
 acceptor_(io_context),
-endpoint_(asio::ip::make_address_v4(config_parser->FrontendAdress()), boost::lexical_cast< unsigned short>(config_parser->FrontendPort())),
+endpoint_(asio::ip::make_address_v4(config_parser->FrontendAddress()), boost::lexical_cast< unsigned short>(config_parser->FrontendPort())),
 proxy_connection_factory_(move(proxy_connection_factory))
 {
     boost::beast::error_code ec;
