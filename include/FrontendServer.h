@@ -11,19 +11,22 @@
 #include <boost/beast/core/error.hpp>
 
 
-class FrontendServer: public std::enable_shared_from_this<FrontendServer> {
+class FrontendServer : public std::enable_shared_from_this<FrontendServer> {
 
-    public:
-    FrontendServer(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser, std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory);
+public:
+    FrontendServer(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser,
+                   std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory);
+
     void run();
 
-    private:
-    boost::asio::io_context & io_context_;
+private:
+    boost::asio::io_context &io_context_;
     std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory_;
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::endpoint endpoint_;
 
     void do_accept();
+
     void on_accept(std::shared_ptr<ProxyConnection> proxy_connection, boost::beast::error_code error_code);
 };
 
