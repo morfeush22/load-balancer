@@ -11,11 +11,12 @@
 
 class SchedulingStrategyBuilder {
 
-    public:
+public:
     explicit SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser);
+
     std::shared_ptr<SchedulingStrategy> ConstructSchedulingStrategy();
 
-    private:
+private:
     std::string algorithm_;
     std::string cookie_name_;
 
