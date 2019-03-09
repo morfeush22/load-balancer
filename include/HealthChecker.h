@@ -15,8 +15,8 @@
 class HealthChecker : public std::enable_shared_from_this<HealthChecker> {
 
 public:
-    HealthChecker(boost::asio::io_context &io_context, unsigned int health_check_period,
-                  std::string health_check_endpoint);
+    HealthChecker(boost::asio::io_context &io_context, std::string health_check_endpoint,
+                      unsigned int health_check_period);
 
     void run(std::string host, std::string port);
 

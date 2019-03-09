@@ -17,8 +17,9 @@ class HealthCheckerFactory {
     std::shared_ptr<HealthChecker> MakeHealthChecker();
 
     private:
+    std::string health_check_endpoint_;
+    unsigned int health_check_period_;
     boost::asio::io_context &io_context_;
-    std::shared_ptr<ConfigParser> config_parser_;
 
 };
 

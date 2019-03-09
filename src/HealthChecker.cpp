@@ -14,8 +14,8 @@ using namespace std;
 using tcp = boost::asio::ip::tcp;
 
 
-HealthChecker::HealthChecker(boost::asio::io_context &io_context, unsigned int health_check_period,
-                             string health_check_endpoint) :
+HealthChecker::HealthChecker(boost::asio::io_context &io_context, std::string health_check_endpoint,
+                             unsigned int health_check_period) :
         deadline_timer_(io_context),
         health_check_endpoint_(move(health_check_endpoint)),
         health_check_period_(health_check_period),
