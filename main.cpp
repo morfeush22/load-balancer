@@ -45,7 +45,6 @@ int main(int argc, char **argv) {
 
     auto proxy_connection_factory = make_unique<ProxyConnectionFactory>(
             io_context,
-            config_parser,
             backend_servers_repository,
             scheduling_strategy);
     auto frontend_server = make_shared<FrontendServer>(io_context, config_parser, move(proxy_connection_factory));
