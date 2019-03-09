@@ -2,8 +2,8 @@
 // Created by morfeush22 on 04.03.19.
 //
 
-#include "../include/Logger.h"
 #include "../include/FrontendServer.h"
+#include "../include/Logger.h"
 #include <boost/lexical_cast.hpp>
 
 namespace asio = boost::asio;

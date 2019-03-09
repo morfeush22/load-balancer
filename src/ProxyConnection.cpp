@@ -2,8 +2,8 @@
 // Created by morfeush22 on 04.03.19.
 //
 
-#include "../include/ProxyConnection.h"
 #include "../include/Logger.h"
+#include "../include/ProxyConnection.h"
 #include <boost/lexical_cast.hpp>
 
 namespace asio = boost::asio;

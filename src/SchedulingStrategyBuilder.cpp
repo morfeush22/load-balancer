@@ -2,9 +2,9 @@
 // Created by morfeush22 on 06.03.19.
 //
 
-#include "../include/SchedulingStrategyBuilder.h"
-#include "../include/RoundRobin.h"
 #include "../include/Logger.h"
+#include "../include/RoundRobin.h"
+#include "../include/SchedulingStrategyBuilder.h"
 
 
 SchedulingStrategyBuilder::SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser) :

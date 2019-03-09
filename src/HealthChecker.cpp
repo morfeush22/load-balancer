@@ -2,8 +2,8 @@
 // Created by morfeush22 on 28.02.19.
 //
 
-#include "../include/Logger.h"
 #include "../include/HealthChecker.h"
+#include "../include/Logger.h"
 
 #define HTTP_VERSION 10
 
