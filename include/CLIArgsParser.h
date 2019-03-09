@@ -11,17 +11,21 @@
 
 class CLIArgsParser {
 
-    public:
+public:
     CLIArgsParser();
+
     void ParseCLIArgs(int argc, char **argv);
+
     void ShowHelp();
+
     bool ArgsValid();
+
     std::string GetConfigFilePath();
 
-    private:
+private:
+    bool args_valid_ = false;
     std::unique_ptr<boost::program_options::options_description> description_;
     std::unique_ptr<boost::program_options::variables_map> variables_map_;
-    bool are_args_valid_ = false;
 
 };
 

@@ -27,15 +27,15 @@ void CLIArgsParser::ParseCLIArgs(int argc, char **argv) {
         if (variables_map_->count("help"))
             return;
 
-        if (! variables_map_->count("config_file_path"))
+        if (!variables_map_->count("config_file_path"))
             return;
 
-        are_args_valid_ = true;
+        args_valid_ = true;
     }
-    catch(std::exception &e) {
+    catch (std::exception &e) {
         std::cerr << "error: " << e.what() << "\n";
     }
-    catch(...) {
+    catch (...) {
         std::cerr << "Exception of unknown type!\n";
     }
 }
@@ -45,7 +45,7 @@ void CLIArgsParser::ShowHelp() {
 }
 
 bool CLIArgsParser::ArgsValid() {
-    return are_args_valid_;
+    return args_valid_;
 }
 
 std::string CLIArgsParser::GetConfigFilePath() {
