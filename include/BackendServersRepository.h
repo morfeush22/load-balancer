@@ -13,15 +13,15 @@
 
 class BackendServersRepository {
 
-    public:
+public:
     BackendServersRepository(std::unique_ptr<HealthCheckerFactory> &&health_checker_factory,
                              std::shared_ptr<ConfigParser> config_parser);
+
     std::list<BackendServerDescription> GetAllServers();
 
-    private:
-    std::unique_ptr<HealthCheckerFactory> health_checker_factory_;
-    std::shared_ptr<ConfigParser> config_parser_;
+private:
     std::list<BackendServerDescription> backend_servers_;
+    std::unique_ptr<HealthCheckerFactory> health_checker_factory_;
     std::map<std::string, std::shared_ptr<HealthChecker>> health_checkers_;
 
     void StartHealthChecking();
