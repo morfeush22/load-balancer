@@ -6,18 +6,18 @@
 
 using namespace std;
 
+
 //TODO implementation
 const BackendServerDescription &
-RoundRobin::SelectBackendServer(const std::list<BackendServerDescription> &backend_server_description) {
+RoundRobin::SelectBackendServer(const list<BackendServerDescription> &backend_server_description) {
     return backend_server_description.front();
 }
 
 void RoundRobin::UpdateBackendServerStatistics(
         const BackendServerDescription &SelectBackendServer,
-        std::size_t bytes_transferred) {
+        size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 }
 
-RoundRobin::RoundRobin(std::string cookie_name):
-cookie_name_(move(cookie_name))
-{}
+RoundRobin::RoundRobin(string backend_cookie_name) :
+        backend_cookie_name_(move(backend_cookie_name)) {}
