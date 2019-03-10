@@ -16,9 +16,10 @@ public:
     const BackendServerDescription &SelectBackendServer(
             const std::list<BackendServerDescription> &backend_servers) override;
 
-    void UpdateBackendServerStatistics(
-            const BackendServerDescription &SelectBackendServer,
-            std::size_t bytes_transferred) override;
+    void UpdateBackendServerStatistics(const BackendServerDescription &, std::size_t) override;
+
+private:
+    BackendServerDescription previously_chosen_;
 
 };
 

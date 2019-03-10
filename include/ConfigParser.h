@@ -11,6 +11,7 @@
 
 
 struct BackendServerDescription {
+
     std::string id;
     std::string address;
     std::string port;
@@ -18,13 +19,22 @@ struct BackendServerDescription {
     bool health_check;
 
     friend std::ostream &operator<<(std::ostream &stream, const BackendServerDescription &desc) {
-        stream << "server_id:\t" << desc.id << "\n"
-               << "\t\t" << desc.address << "\n"
-               << "\t\t" << desc.port << "\n"
-               << "\t\t" << desc.health_check << "\n";
+        stream << "server_id: " << desc.id
+               << ", server_address: " << desc.address
+               << ", server_port:  " << desc.port
+               << ", server_is_being_checked: " << desc.health_check;
 
         return stream;
     }
+
+    friend bool operator==(const BackendServerDescription &first, const BackendServerDescription &second) {
+        return first.id == second.id &&
+               first.address == second.address &&
+               first.port == second.port &&
+               first.weight == second.weight &&
+               first.health_check == second.health_check;
+    }
+
 };
 
 class ConfigParser {
