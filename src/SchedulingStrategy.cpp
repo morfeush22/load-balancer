@@ -20,11 +20,15 @@ SchedulingStrategy::SelectBackendServer(boost::beast::http::request<boost::beast
     const BackendServerDescription *backend_server_description = nullptr;
 
     auto cookie = frontend_headers.base()["Cookie"];
-    if (!cookie.empty()) {
-        DEBUG("found cookie: ", cookie);
+    if (!cookie.empty() && cookie.find(backend_cookie_name_) != string::npos) {
+        DEBUG("found feasible cookie: ", cookie);
+
+        auto server_id = cookie.substr(backend_cookie_name_.length() + 1);
+
+        DEBUG("server id from cookie: ", server_id);
 
         for (auto const &server: backend_servers) {
-            if (server.id == cookie) {
+            if (server.id == server_id) {
                 backend_server_description = &server;
             }
         }
@@ -34,7 +38,7 @@ SchedulingStrategy::SelectBackendServer(boost::beast::http::request<boost::beast
         DEBUG("cookie found and server healthy: ", backend_server_description->id);
         return *backend_server_description;
     } else {
-        DEBUG("cookie not found or server not healthy");
+        DEBUG("wrong cookie or server not healthy");
         return scheduling_algorithm_->SelectBackendServer(backend_servers);
     }
 }
