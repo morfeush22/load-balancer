@@ -12,13 +12,15 @@
 
 class SchedulingStrategy {
 
-    public:
-    SchedulingStrategy(std::unique_ptr<SchedulingAlgorithm> &&scheduling_algorithm);
-    const BackendServerDescription & SelectBackendServer(
+public:
+    SchedulingStrategy(std::string backend_cookie_name, std::unique_ptr<SchedulingAlgorithm> &&scheduling_algorithm);
+
+    const BackendServerDescription &SelectBackendServer(
             boost::beast::http::request<boost::beast::http::string_body> frontend_headers,
-            const std::list<BackendServerDescription> & backend_server_description);
+            const std::list<BackendServerDescription> &backend_server_description);
 
 private:
+    std::string backend_cookie_name_;
     std::unique_ptr<SchedulingAlgorithm> scheduling_algorithm_;
 
 };

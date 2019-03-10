@@ -16,9 +16,9 @@ SchedulingStrategyBuilder::SchedulingStrategyBuilder(shared_ptr<ConfigParser> co
 shared_ptr<SchedulingStrategy> SchedulingStrategyBuilder::ConstructSchedulingStrategy() {
     if (algorithm_ == "round_robin") {
         DEBUG("using round robin algorithm");
-        return make_shared<SchedulingStrategy>(make_unique<RoundRobin>(backend_cookie_name_));
+        return make_shared<SchedulingStrategy>(backend_cookie_name_, make_unique<RoundRobin>());
     } else {
         WARNING("using default round robin algorithm");
-        return make_shared<SchedulingStrategy>(make_unique<RoundRobin>(backend_cookie_name_));
+        return make_shared<SchedulingStrategy>(backend_cookie_name_, make_unique<RoundRobin>());
     }
 }

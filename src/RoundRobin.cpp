@@ -18,6 +18,3 @@ void RoundRobin::UpdateBackendServerStatistics(
         size_t bytes_transferred) {
     boost::ignore_unused(bytes_transferred);
 }
-
-RoundRobin::RoundRobin(string backend_cookie_name) :
-        backend_cookie_name_(move(backend_cookie_name)) {}
