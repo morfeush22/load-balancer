@@ -164,6 +164,10 @@ void ProxyConnection::on_server_read(boost::beast::error_code error_code, size_t
         server_socket_.shutdown(tcp::socket::shutdown_both, error_code);
         client_response_ = server_response_;
 
+        if (!backend_cookie_name_.empty()) {
+            client_response_.insert("Set-Cookie", backend_cookie_name_ + "=" + backend_server_description_.id);
+        }
+
         http::async_write(
                 client_socket_,
                 client_response_,

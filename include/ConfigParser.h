@@ -21,7 +21,7 @@ struct BackendServerDescription {
     friend std::ostream &operator<<(std::ostream &stream, const BackendServerDescription &desc) {
         stream << "server_id: " << desc.id
                << ", server_address: " << desc.address
-               << ", server_port:  " << desc.port
+               << ", server_port: " << desc.port
                << ", server_is_being_checked: " << desc.health_check;
 
         return stream;
