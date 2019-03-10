@@ -14,7 +14,7 @@ class RoundRobin : public SchedulingAlgorithm {
 
 public:
     const BackendServerDescription &SelectBackendServer(
-            const std::list<BackendServerDescription> &backend_server_description) override;
+            const std::list<BackendServerDescription> &backend_servers) override;
 
     void UpdateBackendServerStatistics(
             const BackendServerDescription &SelectBackendServer,

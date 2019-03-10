@@ -17,7 +17,7 @@ public:
 
     const BackendServerDescription &SelectBackendServer(
             boost::beast::http::request<boost::beast::http::string_body> frontend_headers,
-            const std::list<BackendServerDescription> &backend_server_description);
+            const std::list<BackendServerDescription> &backend_servers);
 
 private:
     std::string backend_cookie_name_;

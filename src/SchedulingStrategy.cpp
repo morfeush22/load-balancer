@@ -2,6 +2,7 @@
 // Created by morfeush22 on 07.03.19.
 //
 
+#include "../include/Logger.h"
 #include "../include/SchedulingStrategy.h"
 
 using namespace std;
@@ -15,18 +16,25 @@ SchedulingStrategy::SchedulingStrategy(std::string backend_cookie_name,
 // list can not be empty
 const BackendServerDescription &
 SchedulingStrategy::SelectBackendServer(boost::beast::http::request<boost::beast::http::string_body> frontend_headers,
-                                        const list<BackendServerDescription> &backend_server_description) {
+                                        const list<BackendServerDescription> &backend_servers) {
+    const BackendServerDescription *backend_server_description = nullptr;
 
+    auto cookie = frontend_headers.base()["Cookie"];
+    if (!cookie.empty()) {
+        DEBUG("found cookie: ", cookie);
 
-    //TODO implementation
-    //if has cookie
-    //check list for server by id
-    //if server found, use it
-    //else choose one from list
+        for (auto const &server: backend_servers) {
+            if (server.id == cookie) {
+                backend_server_description = &server;
+            }
+        }
+    }
 
-    //BackendServerDescription server;
-    //foreach...
-    //if(!server)
-    //get one from scheduling algorithm
-    return scheduling_algorithm_->SelectBackendServer(backend_server_description);
+    if (backend_server_description) {
+        DEBUG("cookie found and server healthy: ", backend_server_description->id);
+        return *backend_server_description;
+    } else {
+        DEBUG("cookie not found or server not healthy");
+        return scheduling_algorithm_->SelectBackendServer(backend_servers);
+    }
 }

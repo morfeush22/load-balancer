@@ -9,8 +9,8 @@ using namespace std;
 
 //TODO implementation
 const BackendServerDescription &
-RoundRobin::SelectBackendServer(const list<BackendServerDescription> &backend_server_description) {
-    return backend_server_description.front();
+RoundRobin::SelectBackendServer(const list<BackendServerDescription> &backend_servers) {
+    return backend_servers.front();
 }
 
 void RoundRobin::UpdateBackendServerStatistics(
