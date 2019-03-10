@@ -10,8 +10,9 @@ namespace asio = boost::asio;
 using namespace std;
 
 
-FrontendServer::FrontendServer(boost::asio::io_context &io_context, shared_ptr<ConfigParser> config_parser,
-                               unique_ptr<ProxyConnectionFactory> proxy_connection_factory) :
+FrontendServer::FrontendServer(boost::asio::io_context &io_context,
+                               std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory,
+                               std::shared_ptr<ConfigParser> config_parser) :
         io_context_(io_context),
         acceptor_(io_context),
         endpoint_(asio::ip::make_address_v4(config_parser->FrontendAddress()),

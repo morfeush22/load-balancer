@@ -9,12 +9,14 @@ using namespace std;
 
 
 ProxyConnectionFactory::ProxyConnectionFactory(boost::asio::io_context &io_context,
-                                               shared_ptr<BackendServersRepository> backend_servers_repository,
-                                               shared_ptr<SchedulingStrategy> scheduling_strategy) :
+                                               std::shared_ptr<BackendServersRepository> backend_servers_repository,
+                                               std::shared_ptr<SchedulingStrategy> scheduling_strategy,
+                                               std::shared_ptr<ConfigParser> config_parser) :
+        backend_cookie_name_(move(config_parser->BackendCookieName())),
         io_context_(io_context),
         servers_repository_(move(backend_servers_repository)),
         scheduling_strategy_(move(scheduling_strategy)) {}
 
 shared_ptr<ProxyConnection> ProxyConnectionFactory::MakeProxyConnection() {
-    return make_shared<ProxyConnection>(io_context_, servers_repository_, scheduling_strategy_);
+    return make_shared<ProxyConnection>(io_context_, servers_repository_, scheduling_strategy_, backend_cookie_name_);
 }

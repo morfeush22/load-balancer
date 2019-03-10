@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
     auto cli_args_parser = make_unique<CLIArgsParser>();
     cli_args_parser->ParseCLIArgs(argc, argv);
 
-    if (! cli_args_parser->ArgsValid()) {
+    if (!cli_args_parser->ArgsValid()) {
         cli_args_parser->ShowHelp();
         return EXIT_FAILURE;
     }
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     auto config_parser = make_shared<ConfigParser>(config_file_path);
     config_parser->ParseConfigFile();
 
-    if (! config_parser->IsConfigValid()) {
+    if (!config_parser->IsConfigValid()) {
         ERROR("invalid config file");
         return EXIT_FAILURE;
     }
@@ -46,8 +46,9 @@ int main(int argc, char **argv) {
     auto proxy_connection_factory = make_unique<ProxyConnectionFactory>(
             io_context,
             backend_servers_repository,
-            scheduling_strategy);
-    auto frontend_server = make_shared<FrontendServer>(io_context, config_parser, move(proxy_connection_factory));
+            scheduling_strategy,
+            config_parser);
+    auto frontend_server = make_shared<FrontendServer>(io_context, move(proxy_connection_factory), config_parser);
 
     frontend_server->run();
     io_context.run();
