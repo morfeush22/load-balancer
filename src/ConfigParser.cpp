@@ -41,6 +41,7 @@ list<BackendServerDescription> ConfigParser::BackendServers() {
         auto child = property_tree_.get_child(id);
         desc.address = child.get<string>("address");
         desc.port = child.get<string>("port");
+        desc.weight = child.get<unsigned int>("weight");
         desc.health_check = child.get<bool>("health_check");
 
         servers.push_back(move(desc));
@@ -69,7 +70,7 @@ string ConfigParser::LogLevel() {
     return property_tree_.get<string>("all.log_level");
 }
 
-bool ConfigParser::IsConfigValid() {
+bool ConfigParser::ConfigValid() {
     //TODO implementation
     return true;
 }

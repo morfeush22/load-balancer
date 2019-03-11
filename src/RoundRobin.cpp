@@ -22,7 +22,7 @@ RoundRobin::SelectBackendServer(const list<BackendServerDescription> &backend_se
         return previously_chosen_;
     }
 
-    ++it;
+    next(it);
     if (it == backend_servers.end()) {
         DEBUG("end of list, returning front: ", front);
         previously_chosen_ = front;

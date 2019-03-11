@@ -38,7 +38,7 @@ SchedulingStrategy::SelectBackendServer(boost::beast::http::request<boost::beast
         DEBUG("cookie found and server healthy: ", backend_server_description->id);
         return *backend_server_description;
     } else {
-        DEBUG("no cookie or server unhealthy, trying another one");
+        DEBUG("using algorithm to choose server");
         return scheduling_algorithm_->SelectBackendServer(backend_servers);
     }
 }

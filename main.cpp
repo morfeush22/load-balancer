@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     auto config_parser = make_shared<ConfigParser>(config_file_path);
     config_parser->ParseConfigFile();
 
-    if (!config_parser->IsConfigValid()) {
+    if (!config_parser->ConfigValid()) {
         ERROR("invalid config file");
         return EXIT_FAILURE;
     }

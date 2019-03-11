@@ -15,7 +15,7 @@ struct BackendServerDescription {
     std::string id;
     std::string address;
     std::string port;
-    unsigned int weight = 1;
+    unsigned int weight;
     bool health_check;
 
     friend std::ostream &operator<<(std::ostream &stream, const BackendServerDescription &desc) {
@@ -44,7 +44,7 @@ public:
 
     void ParseConfigFile();
 
-    bool IsConfigValid();
+    bool ConfigValid();
 
     std::string LogLevel();
 
@@ -67,6 +67,7 @@ public:
 
 private:
     std::string config_file_path_;
+    bool config_valid_ = false;
     boost::property_tree::ptree property_tree_;
 
 };
