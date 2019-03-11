@@ -62,6 +62,8 @@ public:
 
     std::string BackendCookieName();
 
+    bool BackendInsertCookie();
+
 
 private:
     std::string config_file_path_;

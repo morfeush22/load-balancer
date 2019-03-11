@@ -13,6 +13,7 @@ public:
             const std::list <BackendServerDescription> &backend_servers) = 0;
     virtual void UpdateBackendServerStatistics(const BackendServerDescription &backend_server_description,
             std::size_t bytes_transferred) = 0;
+    virtual ~SchedulingAlgorithm() = default;
 
 };
 

@@ -14,17 +14,19 @@ class ProxyConnection : public std::enable_shared_from_this<ProxyConnection> {
 
 public:
     ProxyConnection(boost::asio::io_context &io_context,
-                    std::shared_ptr<BackendServersRepository> backend_servers_repository,
-                    std::shared_ptr<SchedulingStrategy> scheduling_strategy,
-                    std::string backend_cookie_name);
+                        std::shared_ptr<BackendServersRepository> backend_servers_repository,
+                        std::shared_ptr<SchedulingStrategy> scheduling_strategy,
+                        bool backend_insert_cookie,
+                        std::string backend_cookie_name);
 
     boost::asio::ip::tcp::socket &FrontendSocket();
 
     void run();
 
 private:
+    bool backend_insert_cookie_;
     std::string backend_cookie_name_;
-    BackendServerDescription backend_server_description_;
+    BackendServerDescription chosen_server_;
     std::shared_ptr<BackendServersRepository> backend_servers_repository_;
     boost::beast::flat_buffer client_buffer_;
     boost::beast::http::request<boost::beast::http::string_body> client_request_;

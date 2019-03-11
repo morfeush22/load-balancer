@@ -16,8 +16,10 @@ using tcp = boost::asio::ip::tcp;
 ProxyConnection::ProxyConnection(boost::asio::io_context &io_context,
                                  std::shared_ptr<BackendServersRepository> backend_servers_repository,
                                  std::shared_ptr<SchedulingStrategy> scheduling_strategy,
+                                 bool backend_insert_cookie,
                                  std::string backend_cookie_name)
         :
+        backend_insert_cookie_(backend_insert_cookie),
         backend_cookie_name_(move(backend_cookie_name)),
         resolver_(io_context),
         client_socket_(io_context),
@@ -67,11 +69,11 @@ void ProxyConnection::on_client_read(boost::beast::error_code error_code, size_t
 
     server_request_ = client_request_;
     //TODO pass bytes transferred to scheduling strategy
-    backend_server_description_ = scheduling_strategy_->SelectBackendServer(server_request_, servers_list);
+    chosen_server_ = scheduling_strategy_->SelectBackendServer(server_request_, servers_list);
 
     resolver_.async_resolve(
-            backend_server_description_.address,
-            backend_server_description_.port,
+            chosen_server_.address,
+            chosen_server_.port,
             boost::bind(
                     &ProxyConnection::on_server_resolve,
                     shared_from_this(),
@@ -164,8 +166,8 @@ void ProxyConnection::on_server_read(boost::beast::error_code error_code, size_t
         server_socket_.shutdown(tcp::socket::shutdown_both, error_code);
         client_response_ = server_response_;
 
-        if (!backend_cookie_name_.empty()) {
-            client_response_.insert("Set-Cookie", backend_cookie_name_ + "=" + backend_server_description_.id);
+        if (backend_insert_cookie_ && !backend_cookie_name_.empty()) {
+            client_response_.insert("Set-Cookie", backend_cookie_name_ + "=" + chosen_server_.id);
         }
 
         http::async_write(

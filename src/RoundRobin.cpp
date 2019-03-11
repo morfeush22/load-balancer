@@ -9,7 +9,6 @@
 using namespace std;
 
 
-//TODO implementation
 const BackendServerDescription &
 RoundRobin::SelectBackendServer(const list<BackendServerDescription> &backend_servers) {
     const auto &front = backend_servers.front();

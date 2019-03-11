@@ -22,6 +22,7 @@ public:
     std::shared_ptr<ProxyConnection> MakeProxyConnection();
 
 private:
+    bool backend_insert_cookie_;
     std::string backend_cookie_name_;
     boost::asio::io_context &io_context_;
     std::shared_ptr<BackendServersRepository> servers_repository_;

@@ -74,4 +74,8 @@ bool ConfigParser::IsConfigValid() {
     return true;
 }
 
+bool ConfigParser::BackendInsertCookie() {
+    return property_tree_.get<bool>("backend.insert_cookie");
+}
+
 
