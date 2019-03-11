@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     config_parser->ParseConfigFile();
 
     if (!config_parser->ConfigValid()) {
-        ERROR("invalid config file");
+        cout << "Invalid config file!\n";
         return EXIT_FAILURE;
     }
 
