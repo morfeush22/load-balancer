@@ -36,8 +36,6 @@ void HealthChecker::run(string host, string port) {
         DEBUG("backend server is responding: ", host, ":", port, health_check_endpoint_);
     }
 
-    DEBUG("sending health check to backend server: ", host, ":", port, health_check_endpoint_);
-
     resolver_.async_resolve(
             host,
             port,
