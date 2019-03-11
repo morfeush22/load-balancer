@@ -22,6 +22,7 @@ struct BackendServerDescription {
         stream << "server_id: " << desc.id
                << ", server_address: " << desc.address
                << ", server_port: " << desc.port
+               << ", weight: " << desc.weight
                << ", server_is_being_checked: " << desc.health_check;
 
         return stream;

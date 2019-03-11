@@ -13,14 +13,32 @@ WeightedRoundRobin::WeightedRoundRobin() :
 
 const BackendServerDescription &
 WeightedRoundRobin::SelectBackendServer(const std::list<BackendServerDescription> &backend_servers) {
-    int sum = std::accumulate(backend_servers.begin(), backend_servers.end(), 0,
-                              [](int acc, const BackendServerDescription &backend_server_description) {
-                                  return acc + backend_server_description.weight;
+    int acc_weight = std::accumulate(backend_servers.begin(), backend_servers.end(), 0,
+                              [](int acc, const BackendServerDescription &server) {
+                                  return acc + server.weight;
                               });
 
-    DEBUG("sum of weights: ", sum);
+    DEBUG("sum of weights: ", acc_weight);
 
-    return backend_servers.front();
+    std::uniform_real_distribution<double> distribution(0, acc_weight);
+    auto rnd = distribution(generator_);
+
+    DEBUG("random number is: ", rnd);
+
+    double acc = 0;
+    for (const auto &server : backend_servers) {
+        acc += server.weight;
+        if (rnd < acc) {
+            DEBUG("returning server: ", server);
+            return server;
+        }
+    }
+
+    const auto &front = backend_servers.front();
+
+    WARNING("could not choose server using weights, returning front: ", front);
+
+    return front;
 }
 
 void WeightedRoundRobin::UpdateBackendServerStatistics(const BackendServerDescription &, size_t) {
