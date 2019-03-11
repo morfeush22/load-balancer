@@ -56,7 +56,7 @@ namespace logger {
     private:
         unsigned int log_line_number_;
         std::stringstream log_stream_;
-        SeverityType severity_ = SeverityType::error;
+        SeverityType severity_ = SeverityType::warning;
 
         std::string Time() {
             std::string time_str;
