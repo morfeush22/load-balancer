@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(load_balancer)
 
-find_package(Boost 1.67 COMPONENTS program_options system REQUIRED)
+find_package(Boost 1.68 COMPONENTS program_options system REQUIRED)
 find_package(Threads)
 include_directories(${Boost_INCLUDE_DIRS})
 
