@@ -15,8 +15,9 @@ SchedulingStrategy::SchedulingStrategy(std::string backend_cookie_name,
 
 // list can not be empty
 const BackendServerDescription &
-SchedulingStrategy::SelectBackendServer(boost::beast::http::request<boost::beast::http::string_body> frontend_headers,
-                                        const list<BackendServerDescription> &backend_servers) {
+SchedulingStrategy::SelectBackendServer(
+        const boost::beast::http::request<boost::beast::http::string_body> &frontend_headers,
+        const list<BackendServerDescription> &backend_servers) {
     const BackendServerDescription *backend_server_description = nullptr;
 
     auto cookie = frontend_headers.base()["Cookie"];

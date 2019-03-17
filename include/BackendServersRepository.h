@@ -17,8 +17,8 @@ public:
     /**
      * Takes care of maintaining list of healthy backend servers. Uses HealthChecker instances to periodically query
      * servers status.
-     * @param health_checker_factory Pointer to HealthCheckerFactory class object instance
-     * @param config_parser Pointer to ConfigParser class object instance
+     * @param health_checker_factory Pointer to HealthCheckerFactory class instance
+     * @param config_parser Pointer to ConfigParser class instance
      */
     BackendServersRepository(std::unique_ptr<HealthCheckerFactory> &&health_checker_factory,
                              std::shared_ptr<ConfigParser> config_parser);

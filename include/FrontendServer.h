@@ -14,6 +14,12 @@
 class FrontendServer : public std::enable_shared_from_this<FrontendServer> {
 
 public:
+    /**
+     * Listens to incoming connections and passes them to one of healthy backend servers.
+     * @param io_context Reference to Boost io_context object
+     * @param proxy_connection_factory Pointer to ProxyConnectionFactory class instance
+     * @param config_parser Pointer to ConfigParser class instance
+     */
     FrontendServer(boost::asio::io_context &io_context,
                    std::unique_ptr<ProxyConnectionFactory> proxy_connection_factory,
                    std::shared_ptr<ConfigParser> config_parser);

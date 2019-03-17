@@ -14,11 +14,22 @@
 class ProxyConnectionFactory {
 
 public:
+    /**
+     * Takes care of constructing valid ProxyConnection objects.
+     * @param io_context io_context Reference to Boost io_context object
+     * @param backend_servers_repository Pointer to BackendServersRepository class instance
+     * @param scheduling_strategy Pointer to SchedulingStrategy class instance
+     * @param config_parser Pointer to ConfigParser class instance
+     */
     ProxyConnectionFactory(boost::asio::io_context &io_context,
                            std::shared_ptr<BackendServersRepository> backend_servers_repository,
                            std::shared_ptr<SchedulingStrategy> scheduling_strategy,
                            std::shared_ptr<ConfigParser> config_parser);
 
+    /**
+     * Constructs new ProxyConnection object.
+     * @return Newly constructed ProxyConnection object
+     */
     std::shared_ptr<ProxyConnection> MakeProxyConnection();
 
 private:

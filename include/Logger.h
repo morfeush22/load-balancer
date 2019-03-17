@@ -26,6 +26,10 @@ namespace logger {
 
     class Logger {
     public:
+        /**
+         * Returns singleton instance of Logger class.
+         * @return Reference to singleton instance of Logger class
+         */
         static auto &Instance() {
             static Logger logger;
             return logger;
@@ -39,17 +43,26 @@ namespace logger {
 
         Logger &operator=(Logger &&) = delete;
 
-
+        /**
+         * Template function that prints log string to stdout, only prints logs with higher than set severity level.
+         * @tparam severity
+         * @tparam Args
+         * @param args
+         */
         template<SeverityType severity, typename ...Args>
         void Print(Args ...args);
 
+        /**
+         * Sets severity level of Logger instance.
+         * @param severity One of: debug, warning, error
+         */
         void SetLevel(const std::string &severity) {
             if (severity == "debug") {
                 severity_ = SeverityType::debug;
-            } else if (severity == "error") {
-                severity_ = SeverityType::error;
             } else if (severity == "warning") {
                 severity_ = SeverityType::warning;
+            } else if (severity == "error") {
+                severity_ = SeverityType::error;
             }
         }
 

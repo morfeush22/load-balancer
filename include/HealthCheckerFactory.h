@@ -13,7 +13,17 @@
 class HealthCheckerFactory {
 
     public:
+    /**
+     * Takes care of constructing valid HealthChecker objects.
+     * @param io_context Reference to Boost io_context object
+     * @param config_parser Pointer to ConfigParser class instance
+     */
     explicit HealthCheckerFactory(boost::asio::io_context &io_context, std::shared_ptr<ConfigParser> config_parser);
+
+    /**
+     * Constructs new HealthChecker object.
+     * @return Newly constructed HealthChecker object
+     */
     std::shared_ptr<HealthChecker> MakeHealthChecker();
 
     private:

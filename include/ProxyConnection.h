@@ -13,14 +13,31 @@
 class ProxyConnection : public std::enable_shared_from_this<ProxyConnection> {
 
 public:
+    /**
+     * Mediator that handles connections between client and backend server. Acts like Reverse Proxy. Chooses backend server
+     * using cookie settings or SchedulingStrategy class object.
+     * @param io_context Reference to Boost io_context object
+     * @param backend_servers_repository Pointer to BackendServersRepository class instance
+     * @param scheduling_strategy Pointer to SchedulingStrategy class instance
+     * @param backend_insert_cookie Whether to insert cookie to enable sticky sessions - further request will always be handled
+     * with the same backend server
+     * @param backend_cookie_name Name of cookie to be looked for in client headers, can be empty to disable search
+     */
     ProxyConnection(boost::asio::io_context &io_context,
                         std::shared_ptr<BackendServersRepository> backend_servers_repository,
                         std::shared_ptr<SchedulingStrategy> scheduling_strategy,
                         bool backend_insert_cookie,
                         std::string backend_cookie_name);
 
+    /**
+     * Returns reference to client part socket of connection.
+     * @return Reference to boost::asio::ip::tcp::socket object
+     */
     boost::asio::ip::tcp::socket &FrontendSocket();
 
+    /**
+     * Starts operation of proxying.
+     */
     void run();
 
 private:

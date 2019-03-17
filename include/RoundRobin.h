@@ -1,4 +1,4 @@
-//cookie_name_
+//
 // Created by morfeush22 on 04.03.19.
 //
 
@@ -13,9 +13,18 @@
 class RoundRobin : public SchedulingAlgorithm {
 
 public:
+    /**
+     * Algorithm that can be used to choose backend server. Keeps the object of previously chosen server, and selects next
+     * one as in BackendServerDescription list or front, if next server can not be chosen.
+     * @param backend_servers Non-empty list of healthy backend servers
+     * @return Reference to chosen backend server
+     */
     const BackendServerDescription &SelectBackendServer(
             const std::list<BackendServerDescription> &backend_servers) override;
 
+    /**
+     * Not implemented
+     */
     void UpdateBackendServerStatistics(const BackendServerDescription &, std::size_t) override;
 
 private:

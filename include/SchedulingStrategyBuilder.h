@@ -12,8 +12,16 @@
 class SchedulingStrategyBuilder {
 
 public:
+    /**
+     * Takes care of building valid SchedulingStrategy objects.
+     * @param config_parser Pointer to ConfigParser class instance
+     */
     explicit SchedulingStrategyBuilder(std::shared_ptr<ConfigParser> config_parser);
 
+    /**
+     * Constructs new SchedulingStrategy object.
+     * @return Newly constructed SchedulingStrategy object
+     */
     std::shared_ptr<SchedulingStrategy> ConstructSchedulingStrategy();
 
 private:

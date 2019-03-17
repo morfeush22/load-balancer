@@ -15,11 +15,26 @@
 class HealthChecker : public std::enable_shared_from_this<HealthChecker> {
 
 public:
+    /**
+     * Takes care of ensuring that given backend server correctly responds to HTTP requests.
+     * @param io_context Reference to Boost io_context object
+     * @param health_check_endpoint HTTP path that is used to check backend server healthiness, must respond with 200 code
+     * @param health_check_period Interval of HTTP health check requests
+     */
     HealthChecker(boost::asio::io_context &io_context, std::string health_check_endpoint,
                       unsigned int health_check_period);
 
+    /**
+     * Starts health checking process.
+     * @param host Address of backend server
+     * @param port Listen port of backend server
+     */
     void run(std::string host, std::string port);
 
+    /**
+     * Returns backend server health status.
+     * @return True if backend server is healthy, false otherwise
+     */
     bool Healthy();
 
 private:
