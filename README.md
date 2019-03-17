@@ -1,3 +1,5 @@
+# load-balancer
+
 Very simple load balancer, built using boost::asio.
 
 To build:
@@ -16,4 +18,4 @@ To run:
 List of supported features:
 - health checks
 - two scheduling algorithms: `round_robin` and `weighted_round_robin`
-- sticky sessions, either by inserting cookie, or using cookie configured bt backend server
+- sticky sessions, either by inserting cookie, or using cookie configured by backend server
