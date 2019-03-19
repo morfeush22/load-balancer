@@ -5,12 +5,14 @@
 #ifndef LOAD_BALANCER_LOGGER_H
 #define LOAD_BALANCER_LOGGER_H
 
+#include <fstream>
 #include <iostream>
-#include <mutex>
+#include <memory>
 #include <sstream>
 #include <string>
 
 #define SET_LOGGING_LEVEL logger::Logger::Instance().SetLevel
+#define SET_LOGGING_OUTPUT logger::Logger::Instance().SetFileOutput
 #define DEBUG logger::Logger::Instance().Print<logger::SeverityType::debug>
 #define ERROR logger::Logger::Instance().Print<logger::SeverityType::error>
 #define WARNING logger::Logger::Instance().Print<logger::SeverityType::warning>
@@ -66,10 +68,26 @@ namespace logger {
             }
         }
 
+        void SetFileOutput(const std::string &file_path) {
+            if (file_path.empty()) {
+                return;
+            }
+
+            auto file = std::make_shared<std::ofstream>();
+            file->open(file_path, std::ios::out | std::ios::app);
+            output_stream_ = std::move(file);
+        }
+
     private:
         unsigned int log_line_number_;
         std::stringstream log_stream_;
         SeverityType severity_ = SeverityType::warning;
+        std::shared_ptr<std::ostream> output_stream_;
+
+        Logger() :
+                output_stream_(&std::cout, [](std::ostream *) {}) {
+            log_line_number_ = 0;
+        }
 
         std::string Time() {
             std::string time_str;
@@ -92,17 +110,12 @@ namespace logger {
         }
 
         void PrintImpl() {
-            std::cout << (Header() + log_stream_.str()) << "\n";
+            *output_stream_ << (Header() + log_stream_.str()) << "\n";
             log_stream_.str("");
         }
 
         template<typename First, typename ...Rest>
         void PrintImpl(First parm1, Rest ...parm);
-
-        Logger() {
-            log_line_number_ = 0;
-        }
-
 
     };
 

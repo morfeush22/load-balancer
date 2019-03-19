@@ -14,6 +14,7 @@
 #define DEFAULT_BACKEND_ALGORITHM "round_robin"
 #define DEFAULT_BACKEND_COOKIE_NAME ""
 #define DEFAULT_LOG_LEVEL "error"
+#define DEFAULT_LOG_FILE_PATH ""
 #define DEFAULT_BACKEND_INSERT_COOKIE false
 
 namespace prop_tree = boost::property_tree;
@@ -159,6 +160,17 @@ bool ConfigParser::BackendInsertCookie() {
     }
 
     return backend_insert_cookie.value();
+}
+
+std::string ConfigParser::LogFilePath() {
+    auto all_file_path = property_tree_.get_optional<string>("all.log_file_path");
+
+    if (!all_file_path) {
+        WARNING("wrong or missing all.log_file_path, using: '", DEFAULT_LOG_FILE_PATH, "'");
+        return DEFAULT_LOG_FILE_PATH;
+    }
+
+    return all_file_path.value();
 }
 
 

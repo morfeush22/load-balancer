@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
     }
 
     SET_LOGGING_LEVEL(config_parser->LogLevel());
+    SET_LOGGING_OUTPUT(config_parser->LogFilePath());
 
     boost::asio::io_context io_context;
 

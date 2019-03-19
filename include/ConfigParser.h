@@ -132,6 +132,12 @@ public:
      */
     bool BackendInsertCookie();
 
+    /**
+     *
+     * @return Path to file, where logs should be stored
+     */
+    std::string LogFilePath();
+
 
 private:
     std::string config_file_path_;
