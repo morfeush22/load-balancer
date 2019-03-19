@@ -40,7 +40,7 @@ public:
 private:
     boost::beast::flat_buffer buffer_;
     boost::asio::deadline_timer deadline_timer_;
-    std::atomic<bool> healthy_ = false;
+    bool healthy_ = false;
     std::string health_check_endpoint_;
     unsigned int health_check_period_;
     boost::beast::http::request<boost::beast::http::empty_body> request_;
